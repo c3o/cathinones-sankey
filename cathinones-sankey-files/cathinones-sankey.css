@@ -1,0 +1,151 @@
+ #caths {
+  --col-2mmc: #DD44AA;
+  --col-3mmc: #44AADD;
+  --col-4mmc: #DDBB44;
+  --col-3cmc: #6050F6;
+  --col-4cmc: #CC7744;
+  --col-dimethylpentylon: #44DD77;
+}
+
+#caths-h1 {
+	text-align: center;
+	font-weight: 900;
+	color: #fff;
+	font-family: "Helvetica Neue LT Std", "Helvetica Neue", InterVariable, Inter, sans-serif;
+	font-size: 2.8em;
+}
+
+#caths {
+	background: #000;
+	color: #fff;
+	font-family: "Helvetica Neue LT Std", "Helvetica Neue", InterVariable, Inter, sans-serif;
+	margin: 2rem;
+	font-size: 22px;
+	text-align: center;
+}
+#cathsform {
+	text-align: center;
+}
+#caths #caths-container {
+	/*width: 900px;*/
+	margin: 0 auto;
+	overflow: hidden;
+	margin-top: 1.5em;
+}
+#caths #caths-graph {
+	height: 475px;
+	/*width: 900px;*/
+	max-width: 1100px;
+	margin: 0 auto;
+}
+
+#caths #caths-as, #caths #caths-is {
+	text-align: center;
+	color: #777;
+	transition: all .2s;
+	font-weight: 900;
+}
+#caths #caths-is {
+	margin-top:.15em;
+}
+#caths #caths-as:before, #caths #caths-is:before {
+	content: "➔";
+	display: inline-block;
+	margin-right: .3em;
+}
+#caths #caths-as:before {
+	transform: rotate(90deg);
+}
+#caths #caths-is:before {
+	transform: rotate(-90deg);
+}
+#caths-container.over-as #caths-as,
+#caths-container.over-is #caths-is {
+	/*text-shadow: 0 0 .2em #fff;*/
+	color: #fff;
+}
+
+
+
+@media (max-width: 1040px) {
+}
+@media (max-width: 750px) {
+	#caths { margin: 1rem }
+	#caths #caths-container,
+	#caths #caths-graph { width: 100% }
+	#caths #caths-graph {
+		height: 600px;
+	}
+	#caths #caths-as { text-align:left }
+	#caths #caths-is { text-align:right }
+}
+
+
+#caths svg text { text-shadow: none !important }
+
+#caths svg g.hoverlayer g.hovertext {
+	/*visibility: hidden;*/
+	opacity: 0;
+	transition: opacity .2s;
+}
+#caths svg g.hoverlayer g.hovertext path {
+	stroke-width: 0 !important;
+	stroke: rgba(0,0,0,.5) !important;
+	transform: scale(1.1);
+}
+#caths svg g.hoverlayer g.hovertext text {
+	transform: translate(0, 10px);
+}
+#caths svg g.hoverlayer g.hovertext.start text {
+	transform: translate(10px, 10px);
+}
+#caths svg g.hoverlayer g.hovertext.end text {
+	transform: translate(-10px, 10px);
+}
+#caths svg g.hoverlayer tspan:first-child tspan:first-child {
+	font-size: 1.3em;
+	font-weight: 700;
+}
+#caths svg g.hoverlayer tspan tspan:nth-child(2) {
+	/*num ... fill: #999;*/
+}
+#caths svg g.hovertext tspan:last-child tspan:last-child {
+	font-weight: bold;
+	font-size: 17px;
+}
+#caths svg g.hovertext.correct tspan:last-child tspan:last-child {
+	font-weight: normal;
+}
+
+#caths svg g.hovertext.subst-2mmc tspan,
+#caths svg g.hovertext.as-2mmc.is-2mmc tspan,
+#caths svg g.hovertext.is-2mmc tspan:last-child tspan:last-child {
+	fill: var(--col-2mmc);
+}
+#caths svg g.hovertext.subst-3mmc tspan,
+#caths svg g.hovertext.as-3mmc.is-3mmc tspan,
+#caths svg g.hovertext.is-3mmc tspan:last-child tspan:last-child {
+	fill: var(--col-3mmc);
+}
+#caths svg g.hovertext.subst-4mmc tspan,
+#caths svg g.hovertext.as-4mmc.is-4mmc tspan,
+#caths svg g.hovertext.is-4mmc tspan:last-child tspan:last-child {
+	fill: var(--col-4mmc);
+}
+#caths svg g.hovertext.subst-3cmc tspan,
+#caths svg g.hovertext.as-3cmc.is-3cmc tspan,
+#caths svg g.hovertext.is-3cmc tspan:last-child tspan:last-child {
+	fill: var(--col-3cmc);
+}
+#caths svg g.hovertext.subst-4cmc tspan,
+#caths svg g.hovertext.as-4cmc.is-4cmc tspan,
+#caths svg g.hovertext.is-4cmc tspan:last-child tspan:last-child {
+	fill: var(--col-4cmc);
+}
+#caths svg g.hovertext.subst-dimethylpentylon tspan,
+#caths svg g.hovertext.as-dimethylpentylon.is-dimethylpentylon tspan,
+#caths svg g.hovertext.is-dimethylpentylon tspan:last-child tspan:last-child {
+	fill: var(--col-dimethylpentylon);
+}
+
+

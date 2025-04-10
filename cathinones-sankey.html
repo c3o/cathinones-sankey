@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cathinone Sankey</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+   	<meta charset="utf-8" />
+
+   	<link rel="stylesheet" href="cathinones-sankey-files/fonts/InterVariable.css" />
+</head>
+<body style="background:#000">
+
+	<h1 id="caths-h1">&nbsp;</h1>
+
+	<div id="caths" lang="de">
+		<noscript>Fehler: JavaScript ist nicht aktiviert.<br /></noscript>
+		Fehler: Das Cathinone-Sankey-Script läuft nicht.
+	</div>
+	<!--script>window.CathsPath = 'cathinones-sankey-files/';</script-->
+	<!--script>window.CathsPath = 'https://cdn.jsdelivr.net/gh/c3o/cathinones-sankey/cathinones-sankey-files/';</script-->
+	<script src="cathinones-sankey-files/_load.js" type="text/javascript"></script>
+
+	<form id="cathsform">
+		<select id="setting-lang" autocomplete="off" onchange="Caths.setLang(this.options[this.selectedIndex].value)">
+			<option value="de" selected="selected">DE</option>
+			<option value="en">EN</option>
+		</select>
+
+		<select autocomplete="off" onchange="Caths.setAndReload('showMonths', JSON.parse(this.options[this.selectedIndex].value))">
+			<option value="[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]">2024 insgesamt</option>
+			<option value="[1, 2, 3, 4, 5, 6]">2024 HJ 1</option>
+			<option value="[7, 8, 9, 10, 11, 12]">2024 HJ 2</option>
+			<option value="[1, 2, 3]">2024 Q 1</option>
+			<option value="[4, 5, 6]">2024 Q 2</option>
+			<option value="[7, 8, 9]">2024 Q 3</option>
+			<option value="[10, 11, 12]">2024 Q 4</option>
+		</select>
+
+		<select id="setting-includeRCs" autocomplete="off" onchange="Caths.set('includeRCs', this.options[this.selectedIndex].value)">
+			<option value="0">Als 3-MMC oder 4-MMC abgegeben</option>
+			<option value="1">Alle abgegebenen Cathinone</option>
+		</select>
+
+		<button type="button" onclick="Caths.saveSvg()">SVG speichern</button>
+	</form>
+
+</body>
+</html>
