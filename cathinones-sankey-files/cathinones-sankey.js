@@ -78,10 +78,11 @@ Caths.const = {
 		'etc': '#999999',
 		'mix': '#666670',
 	},
-	//size: { width: 900, height: 475 }, depends on mobile/desktop
-	baseElementId: 'caths',
-	graphElementId: 'caths-graph',
-	exportElementId: 'caths-export',
+	//size: { width: 900, height: 475 }, // responsive
+	baseElId: 'caths',
+	plotElId: 'caths-plot',
+	exportElId: 'caths-export',
+	clickPopupElId: 'caths-clickpopup',
 	breakpoint: 750,
 	substCleanup: [
 		['glossary/cathinone', 'Mix'],
@@ -128,7 +129,7 @@ Caths.sankey = {
 	dataMergeIn: {
 		type: "sankey",
 		domain: { x: [0,1], y: [0,1] },
-		//orientation: "v",
+		//orientation: "v", // responsive
 		valueformat: "0",		
 		textfont: {
 			family: Caths.const.font,
@@ -138,7 +139,7 @@ Caths.sankey = {
 		arrangement: 'fixed', // 'snap' is fun but useless
 	},
 	nodeMergeIn: {
-	    //pad: 30,
+	    //pad: 30, // responsive
 	    thickness: 40,
 	    line: { width: 0 },
 	},
@@ -146,11 +147,12 @@ Caths.sankey = {
 		font: { size: 18, color: '#ffffff', family: Caths.const.font },
 		plot_bgcolor: '#000000',
 		paper_bgcolor: '#000000',
-		//margin: { l: 20, r: 20, t: 20, b: 20 }
+		transition: { duration: 0 }, // doesn't work
+		//margin: { l: 20, r: 20, t: 20, b: 20 } // responsive
 	},
 	config: {
 		displayModeBar: false,
-		responsive: false, //true
+		responsive: false, // implemented my own, with a breakpoint
 	},
 	hoverlabel: {
 		bgcolor: '#000000',
@@ -160,13 +162,8 @@ Caths.sankey = {
 };
 
 Caths.plot = null; // Plotly object
-
-// Settings
-
-Caths.settings = {
-	includeRCs: 0,
-	showMonths: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], // 0 = no date
-}
+Caths.baseEl = null;
+Caths.clickPopupEl = null;
 
 Caths.setup = () => {
 	var error = '';
@@ -174,28 +171,25 @@ Caths.setup = () => {
 	if (!window.Plotly) { error += 'Fehler: Bibliothek Plotly nicht geladen!<br />'; }
 	if (!window.CathsCSV) { error += 'Fehler: Cathinon-Daten nicht geladen!<br />'; }
 
-	var el = document.getElementById(Caths.const.baseElementId);
+	Caths.baseEl = document.getElementById(Caths.const.baseElId);
 	if (error != '') {
-		el.innerHTML = error;
+		Caths.baseEl.innerHTML = error;
 	} else {
-		el.innerHTML = `
+		Caths.baseEl.innerHTML = `
 			<div id="caths-container">
 				<div id="caths-as">&nbsp;</div>
-				<div id="caths-graph"></div>
+				<div id="caths-plot"></div>
 				<div id="caths-is">&nbsp;</div>
 			</div>
-			<img id="caths-export"></img>`;
+			<img id="caths-export" />
+			<div id="caths-clickpopup"></div>`;
 
-		Caths.lang = (window.Weglot && Weglot.getCurrentLang()) //localStorage.getItem('wglang')
-			|| el.getAttribute('lang')
+		Caths.plot = document.getElementById(Caths.const.plotElId);
+		Caths.clickPopupEl = document.getElementById(Caths.const.clickPopupElId);
+
+		Caths.lang = (window.Weglot && Weglot.getCurrentLang())
+			|| Caths.baseEl.getAttribute('lang')
 			|| Caths.lang;
-
-		window.lastInnerWidth = window.innerWidth;
-		if (window.innerWidth <= Caths.const.breakpoint) {
-			Caths.mobileLayout();
-		} else {
-			Caths.desktopLayout();
-		}
 
 		Caths.load();
 	}
@@ -204,47 +198,69 @@ Caths.setup = () => {
 Caths.load = () => {
 	Caths.initSettingsAndLang();
 	Caths.parseData();
-	Caths.renderChart();
+	Caths.setupPlot();
+	Caths.renderPlot();
+}
+
+
+// Responsiveness
+
+Caths.lastInnerWidth = null;
+
+Caths.inMobileMode = () => {
+	return (window.innerWidth <= Caths.const.breakpoint);
 }
 
 window.addEventListener('resize', () => {
-	var diff = Math.abs(window.lastInnerWidth-window.innerWidth);
-	if (window.innerWidth <= Caths.const.breakpoint) {
-		if (window.lastInnerWidth > Caths.const.breakpoint || (diff > 10)) {
-			window.lastInnerWidth = window.innerWidth;
-			Caths.mobileLayout();
-			Caths.load();
-		}
-	} else {
-		if (window.lastInnerWidth <= Caths.const.breakpoint || (diff > 10)) {
-			window.lastInnerWidth = window.innerWidth;
-			Caths.desktopLayout();
-			Caths.load();
-		}
-	}
+	var diff = Math.abs(Caths.lastInnerWidth-window.innerWidth);
+	if (diff > 10) Caths.renderPlot();
 });
+
+// TODO: Could do this more declaratively & merge in renderPlot
+Caths.mobileLayout = () => {
+	var w = Caths.plot.offsetWidth;
+	Caths.const.size = { width: w, height: 600 };
+	Caths.plot.style.height = Caths.const.size.height+'px';
+	Caths.sankey.dataMergeIn.orientation = 'h';
+	Caths.sankey.layout.margin = { l: 0, r: 0, t: 0, b: 20 };
+	Caths.sankey.nodeMergeIn.pad = 22;
+}
+Caths.desktopLayout = () => {
+	var w = Caths.plot.offsetWidth;
+	var h = w / 2.3 + 50;
+	Caths.const.size = { width: w, height: h };
+	Caths.plot.style.height = h+'px';
+	Caths.sankey.dataMergeIn.orientation = 'v';
+	Caths.sankey.layout.margin = { l: 20, r: 20, t: 20, b: 20 };
+	Caths.sankey.nodeMergeIn.pad = 30;
+}
+
+// Settings
+
+Caths.settings = {
+	includeRCs: 0,
+	showMonths: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], // 0 = no date
+}
 
 Caths.setLang = (val) => {
 	Caths.lang = val;
 	Caths.load();
 }
-if(window.Weglot) {
+if (window.Weglot) {
 	Weglot.on("languageChanged", Caths.setLang);
 }
 
+// for changing sankey setup (e.g. what data to show)
 Caths.set = (s, val) => {
 	Caths.settings[s] = parseInt(val, 10);
-	Caths.renderChart();
+	Caths.setupPlot();
+	Caths.renderPlot();
 }
 
+// for changing data (e.g. which timeframe to consider)
 Caths.setAndReload = (s, val) => {
 	Caths.settings[s] = val;
 	Caths.load();
-}
-
-Caths.innerHTML = (el, html) => {
-	var e = document.getElementById(el);
-	if (e) e.innerHTML = html;
 }
 
 Caths.initSettingsAndLang = () => {
@@ -253,14 +269,14 @@ Caths.initSettingsAndLang = () => {
 	var sel = document.getElementById('setting-lang');
 	if (sel) sel.value = Caths.lang;
 
-	var el = document.getElementById(Caths.const.baseElementId);
-	if (el) el.setAttribute('lang', Caths.lang);
+	Caths.baseEl.setAttribute('lang', Caths.lang);
 
 	Caths.innerHTML('caths-h1', Caths.s[Caths.lang].h1);
 	Caths.innerHTML('caths-as', Caths.s[Caths.lang].as);
 	Caths.innerHTML('caths-is', Caths.s[Caths.lang].is);
 
 }
+
 
 // Data
 
@@ -284,30 +300,13 @@ Caths.defaultData = () => {
 	};		
 }
 
-// Mobile layout
-
-Caths.mobileLayout = () => {
-	var el = document.getElementById(Caths.const.graphElementId);
-	Caths.const.size = {
-		width: (el ? el.offsetWidth : 900),
-		height: 600
-	};
-	Caths.sankey.dataMergeIn.orientation = 'h';
-	Caths.sankey.layout.margin = { l: 0, r: 0, t: 0, b: 20 };
-	Caths.sankey.nodeMergeIn.pad = 22;
-}
-Caths.desktopLayout = () => {
-	var el = document.getElementById(Caths.const.graphElementId);
-	Caths.const.size = {
-		width: (el ? el.offsetWidth : 600),
-		height: 475
-	},
-	Caths.sankey.dataMergeIn.orientation = 'v';
-	Caths.sankey.layout.margin = { l: 20, r: 20, t: 20, b: 20 };
-	Caths.sankey.nodeMergeIn.pad = 30;
-}
 
 // Helpers
+
+Caths.innerHTML = (el, html) => {
+	var e = document.getElementById(el);
+	if (e) e.innerHTML = html;
+}
 
 Caths.normalizeSubst = (s) => {
 	Caths.const.substCleanup.forEach(c => {
@@ -315,38 +314,47 @@ Caths.normalizeSubst = (s) => {
 	});
 	return s;
 }
+
 Caths.toId = (x) => {
 	return x.toLowerCase().replace('-', '');
 }
+
 Caths.toFloat = (s) => {
 	return (s == '' || s == '0,0') ? null : parseFloat(s.replace(',','.'));
 }
+
 Caths.toPercent = (a, b) => {
 	return Math.round((a/b)*100);
 }
+
 Caths.toMaybeLabel = (s) => {
 	return Caths.s[Caths.lang].quoteStart + s + Caths.s[Caths.lang].quoteEnd;
 }
+
 Caths.isIrrelevant = (subst) => {
 	return Caths.const.substIrrelevant.some(a => {
 		return subst.includes(a);
 	});
 }
+
 Caths.isCathinone = (subst) => {
 	return Caths.const.substCathinones.some(a => {
 		return subst.includes(a);
 	});
 }
+
 Caths.isAllCathinones = (found) => {
 	return found.every(f => {
 		return (Caths.isCathinone(f.subst) || Caths.isIrrelevant(f.subst));
 	});
 }
+
 Caths.toVerboseLabel = (l) => {
 	if (l == 'Mix' ) l = Caths.s[Caths.lang].mixVerbose;
 	if (l == 'etc.') l = Caths.s[Caths.lang].other;
 	return l;
 }
+
 Caths.joinWithBr = (arr, joiner) => {
 	var out = '';
 	arr.forEach((a, i) => {
@@ -360,10 +368,12 @@ Caths.joinWithBr = (arr, joiner) => {
 	});
 	return out;
 };
+
 Caths.translateSubstance = (s) => {
 	if (!Caths.s[Caths.lang].subst) return s;
 	return Caths.s[Caths.lang].subst[s] || s;
 };
+
 Caths.addToData = (id, label, col, htl) => {
 	Caths.data.ids.push(id);
 	var labelTrans = Caths.translateSubstance(label);
@@ -380,10 +390,11 @@ Caths.saveSvg = () => {
 		Caths.plot,
 		Object.assign({ format:'svg' }, Caths.const.size)
 	).then(function(url) {
-		var img_svg = document.getElementById(Caths.const.exportElementId);
+		var img_svg = document.getElementById(Caths.const.exportElId);
     	img_svg.setAttribute("src", url);
 	});
 }
+
 
 // The Main Event
 
@@ -497,9 +508,9 @@ Caths.parseData = () => {
 
 }
 
-Caths.renderChart = () => {
+Caths.setupPlot = () => {
 
-	var link = {
+	Caths.data.link = {
 		source: [],
 		target: [],
 		value: [],
@@ -546,9 +557,9 @@ Caths.renderChart = () => {
 			var asIdX = Caths.data.ids.indexOf(asId);
 			var isIdX = Caths.data.ids.indexOf(isId);
 			
-			link.source.push(asIdX);
-			link.target.push(isIdX);
-			link.value.push(pairs[asId][isId]);
+			Caths.data.link.source.push(asIdX);
+			Caths.data.link.target.push(isIdX);
+			Caths.data.link.value.push(pairs[asId][isId]);
 			
 			var pct = Caths.toPercent(pairs[asId][isId], Caths.data.count[asId]);
 			var col = Caths.const.colors.defaultLink; // default
@@ -566,8 +577,8 @@ Caths.renderChart = () => {
 				htl = '<span>'+pct+'%</span> <span>('+pairs[asId][isId]+')</span>'+
 					  ' '+Caths.s[Caths.lang].of+' '+isLabel+Caths.s[Caths.lang].samplesWereCorrect+'<extra></extra>';
 			}
-			link.customdata.push(htl);
-			link.color.push(col);
+			Caths.data.link.customdata.push(htl);
+			Caths.data.link.color.push(col);
 
 			countSamples += pairs[asId][isId];
 			countIs[isId] = (countIs[isId]||0) + pairs[asId][isId];  
@@ -608,6 +619,17 @@ Caths.renderChart = () => {
 		'<br />'+Caths.s[Caths.lang].were+' '+Caths.toVerboseLabel('etc.')+'<br />('+
 		Caths.joinWithBr(etcUnique.sort(), ',')+')<extra></extra>';
 
+};
+
+Caths.renderPlot = () => {
+
+	Caths.lastInnerWidth = window.innerWidth;
+	if (Caths.inMobileMode()) {
+		Caths.mobileLayout();
+	} else {
+		Caths.desktopLayout();
+	}
+
 	var data = Object.assign({
 	  ids: Caths.data.ids,
 	  node: Object.assign({
@@ -617,70 +639,166 @@ Caths.renderChart = () => {
 	    label: Caths.data.labelBr,
 	    color: Caths.data.color,
 	  }, Caths.sankey.nodeMergeIn),
-	  link: link
+	  link: Caths.data.link,
 	}, Caths.sankey.dataMergeIn);
-
-	var el = document.getElementById(Caths.const.graphElementId);
-	if (!el) { console.error('Fehler: HTML-Element für Cathinon-Diagramm (#'+Caths.const.graphElementId+') nicht gefunden!'); return; }
 	
-	var layout = Object.assign(Caths.sankey.layout, Caths.sankey.size);
+	var layout = Object.assign(Caths.sankey.layout, Caths.const.size);
 
-	Plotly.newPlot(el, [data], layout, Caths.sankey.config).then(p => {		
-		Caths.plot = p;
+	// would prefer to use .react here, but that has a slow awkward transition animation
+	// that I can't figure out how to turn off even with layout.transition.duration = 0
+	Plotly.newPlot(Caths.plot, [data], layout, Caths.sankey.config).then(p => {		
 		Caths.postProcess();
 	});
 
-	el.on('plotly_hover', (data) => {
-		var n = data.event.target.nodeName;
-		//if (n != 'text') Plotly.Fx.hover(Caths.const.graphElementId, []);
+	if (Caths.inMobileMode()) {
+		Caths.setupClickInteractivity();
+	} else {
+		Caths.setupHoverInteractivity();
+	}
 
-		var parentEl = document.getElementById(Caths.const.graphElementId).parentNode;
-		parentEl.classList.remove('over-as');
-		parentEl.classList.remove('over-is');
+};
 
-		if (data.points && data.points[0]) {
-			var dP = data.points[0];
-			//Plotly.Fx.hover(el, [{ curveNumber: 0, pointNumber: dP.pointNumber }]);
-			if (n == 'path' && dP && dP.source) {
-				var sourceId = Caths.data.ids[dP.source.pointNumber].replace('?', '');
-				var targetId = Caths.data.ids[dP.target.pointNumber];
-				//Plotly.Fx.hover('graph', [{ pointNumber: dP.source.pointNumber }]);
-			} else if (dP) { // node / subst
-				if (Caths.data.ids[dP.pointNumber].includes('?')) {
-					parentEl.classList.add('over-as');
-				} else {					
-					parentEl.classList.add('over-is');
-				}
-				var id = Caths.data.ids[dP.pointNumber].replace('?', '');
-			}
-		}
+Caths.setupHoverInteractivity = () => {
 
+	Caths.plot.on('plotly_hover', (data) => {
+		var ids = Caths.getContextDataIds(data.points[0]);
 		setTimeout(() => {
 			var ht = document.getElementsByClassName('hovertext')[0];
 			if (ht) {
-				Caths.lastHover = ht;
-				/*console.log('over', ht)*/
 				var a = ht.__data__['anchor']; // "start" or "end"
 				ht.classList.add(a);
-				if (sourceId) {
-					ht.classList.add('as-'+sourceId);
-					if (targetId) ht.classList.add('is-'+targetId);
-					if (sourceId == targetId) ht.classList.add('correct');
-				} else if (id) {
-					ht.classList.add('subst-'+id);
-				}
+				Caths.setContextClasses(ht, ids);
 				ht.style.opacity = 1;
 			}
 		}, 0);
 	});
 
+	Caths.plot.on('plotly_unhover', (data) => {
+		if (data.event.target.nodeName == 'rect') { // unhovering a subst
+			Caths.removeHighlight();
+		}
+	});
 
+}
+
+Caths.setupClickInteractivity = () => {
+
+	Caths.plot.on('plotly_click', (data) => {
+
+		var dP = data.points[0];
+		var isLink = () => { return dP.source; };
+
+		// desel all
+		var sels = Caths.baseEl.getElementsByClassName('sel');
+		Array.from(sels).forEach((s) => { s.classList.remove('sel'); });
+
+		// set classes
+
+		var t = dP.originalEvent.target;
+		var sankeyNode = isLink() ? t : t.parentNode; // node = [rect, text] so we need parent
+
+		sankeyNode.classList.add('sel');
+		if (!isLink()) Caths.multiSel(dP.pointNumber); // sel all related links
+
+		Caths.clickPopupEl.className = ''; // clear
+		var ids = Caths.getContextDataIds(dP);
+		if (ids[1] && ids[0] == ids[1]+'?') sankeyNode.classList.add('correct');
+		Caths.setContextClasses(Caths.clickPopupEl, ids);
+
+		// set contents
+		var cd = dP.customdata;
+		Caths.clickPopupEl.innerHTML = (cd.join) ? cd.join('') : cd;
+
+		// show (if not yet)
+		var d = window.getComputedStyle(Caths.clickPopupEl).getPropertyValue('display');
+		if (d == 'none') {
+			Caths.clickPopupEl.style.display = 'block';
+			setTimeout(() => {
+				Caths.clickPopupEl.style.opacity = 1;
+				Caths.clickPopupEl.style.bottom = 0;
+			}, 1);
+		}
+
+	});
+
+	// Hide popup when clicking outside
+	window.addEventListener('click', Caths.click);
+
+}
+
+Caths.click = (e) => {
+	if (Caths.inMobileMode()) {
+		var t = e.target;
+		if (!(['path', 'rect', 'text'].includes(t.nodeName))
+			|| t.classList.contains('bgsankey')) {
+			Caths.hideClickPopup();
+		}
+	}
+};
+
+Caths.multiSel = (pn) => {
+	var ls = Caths.baseEl.getElementsByClassName('sankey-link');
+	Array.from(ls).forEach((linkNode) => {
+		if (linkNode.__data__.link.source.pointNumber == pn
+			|| linkNode.__data__.link.target.pointNumber == pn) {
+			// safari needs this on a timeout for some reason (bubbling click event?)
+			setTimeout(() => { linkNode.classList.add('sel'); }, 1);
+			var ids = Caths.getContextDataIds(linkNode.__data__.link);
+			if (ids[1] && ids[0] == ids[1]+'?') linkNode.classList.add('correct');
+		}
+	});
+
+}
+
+Caths.getContextDataIds = (pt) => {
+	var id0, id1;
+	if (pt.source) { // is a link
+		id0 = Caths.data.ids[pt.source.pointNumber];
+		id1 = Caths.data.ids[pt.target.pointNumber];
+	} else { // is a node
+		id0 = Caths.data.ids[pt.pointNumber];
+	}
+	return [id0, id1];
+}
+
+Caths.setContextClasses = (el, ids) => {
+	Caths.removeHighlight();
+
+	var id0clean = ids[0].replace('?', '');
+
+	if (ids[1]) { // link (targetid => sourceid)
+		el.classList.add('as-'+id0clean);
+		if (ids[1]) el.classList.add('is-'+ids[1]);
+		if (id0clean == ids[1]) el.classList.add('correct');
+	} else { // node
+		el.classList.add('subst-'+id0clean);
+		var c = (ids[0].includes('?')) ? 'highlight-as' : 'highlight-is';
+		Caths.baseEl.classList.add(c);
+	}
+}
+
+Caths.removeHighlight = () => {
+	Caths.baseEl.classList.remove('highlight-as');
+	Caths.baseEl.classList.remove('highlight-is');
+}
+
+Caths.hideClickPopup = () => {
+	Caths.removeHighlight();
+
+	// desel all
+	var sels = Caths.baseEl.getElementsByClassName('sel');
+	Array.from(sels).forEach((s) => { s.classList.remove('sel'); });
+
+	Caths.clickPopupEl.style.opacity = 0;
+	Caths.clickPopupEl.style.bottom = '-100px';
+	setTimeout(() => {
+		Caths.clickPopupEl.style.display = 'none';
+	}, 300);
 }
 
 Caths.postProcess = () => {
 
-	var c = document.getElementById(Caths.const.graphElementId);
-	var nodes = Array.from(c.getElementsByClassName('sankey-node'));
+	var nodes = Array.from(Caths.plot.getElementsByClassName('sankey-node'));
 	nodes.forEach(n => {
 
 		var h = n.firstChild.getAttribute('height'); // rect
