@@ -1,10 +1,6 @@
 // © 2025 Christopher Clay
 // für das Drogeninformationszentrum (DIZ) der Stadt Zürich 
 
-//window.addEventListener('load', () => {
-//	Caths.setup();
-//});
-
 window.Caths = {};
 
 Caths.lang = 'de';
@@ -65,7 +61,7 @@ Caths.s = {
 }
 
 Caths.const = {
-	font: '"Helvetica Neue LT Std", "Helvetica Neue", InterVariable, Inter, sans-serif', //'InterVariable',
+	font: '"Helvetica Neue LT Std", "Helvetica Neue", InterVariable, Inter, sans-serif',
 	colors: {
 		'default': '#666670',
 		'defaultLink': '#A0AFC350',
@@ -82,7 +78,7 @@ Caths.const = {
 	baseElId: 'caths',
 	plotElId: 'caths-plot',
 	exportElId: 'caths-export',
-	clickPopupElId: 'caths-clickpopup',
+	tapPopupElId: 'caths-tappopup',
 	breakpoint: 750,
 	substCleanup: [
 		['glossary/cathinone', 'Mix'],
@@ -145,8 +141,8 @@ Caths.sankey = {
 	},
 	layout: {
 		font: { size: 18, color: '#ffffff', family: Caths.const.font },
-		plot_bgcolor: '#000000',
-		paper_bgcolor: '#000000',
+		plot_bgcolor: 'transparent',
+		paper_bgcolor: 'transparent',
 		transition: { duration: 0 }, // doesn't work
 		//margin: { l: 20, r: 20, t: 20, b: 20 } // responsive
 	},
@@ -155,15 +151,15 @@ Caths.sankey = {
 		responsive: false, // implemented my own, with a breakpoint
 	},
 	hoverlabel: {
-		bgcolor: '#000000',
-		bordercolor: '#000000',
+		bgcolor: '#202020FF',
+		bordercolor: '#202020FF',
 		font: { color: '#ffffff', size: 16, family: Caths.const.font },
 	},
 };
 
 Caths.plot = null; // Plotly object
 Caths.baseEl = null;
-Caths.clickPopupEl = null;
+Caths.tapPopupEl = null;
 
 Caths.setup = () => {
 	var error = '';
@@ -182,10 +178,10 @@ Caths.setup = () => {
 				<div id="caths-is">&nbsp;</div>
 			</div>
 			<img id="caths-export" />
-			<div id="caths-clickpopup"></div>`;
+			<div id="caths-tappopup"></div>`;
 
 		Caths.plot = document.getElementById(Caths.const.plotElId);
-		Caths.clickPopupEl = document.getElementById(Caths.const.clickPopupElId);
+		Caths.tapPopupEl = document.getElementById(Caths.const.tapPopupElId);
 
 		Caths.lang = (window.Weglot && Weglot.getCurrentLang())
 			|| Caths.baseEl.getAttribute('lang')
@@ -222,7 +218,7 @@ Caths.mobileLayout = () => {
 	Caths.const.size = { width: w, height: 600 };
 	Caths.plot.style.height = Caths.const.size.height+'px';
 	Caths.sankey.dataMergeIn.orientation = 'h';
-	Caths.sankey.layout.margin = { l: 0, r: 0, t: 0, b: 20 };
+	Caths.sankey.layout.margin = { l: 2, r: 2, t: 0, b: 20 };
 	Caths.sankey.nodeMergeIn.pad = 22;
 }
 Caths.desktopLayout = () => {
@@ -236,6 +232,8 @@ Caths.desktopLayout = () => {
 }
 
 // Settings
+
+Caths.haveSetupTapInteractivity = false;
 
 Caths.settings = {
 	includeRCs: 0,
@@ -651,7 +649,7 @@ Caths.renderPlot = () => {
 	});
 
 	if (Caths.inMobileMode()) {
-		Caths.setupClickInteractivity();
+		Caths.setupTapInteractivity();
 	} else {
 		Caths.setupHoverInteractivity();
 	}
@@ -670,7 +668,7 @@ Caths.setupHoverInteractivity = () => {
 				Caths.setContextClasses(ht, ids);
 				ht.style.opacity = 1;
 			}
-		}, 0);
+		}, 10);
 	});
 
 	Caths.plot.on('plotly_unhover', (data) => {
@@ -681,7 +679,7 @@ Caths.setupHoverInteractivity = () => {
 
 }
 
-Caths.setupClickInteractivity = () => {
+Caths.setupTapInteractivity = () => {
 
 	Caths.plot.on('plotly_click', (data) => {
 
@@ -693,45 +691,47 @@ Caths.setupClickInteractivity = () => {
 		Array.from(sels).forEach((s) => { s.classList.remove('sel'); });
 
 		// set classes
-
 		var t = dP.originalEvent.target;
 		var sankeyNode = isLink() ? t : t.parentNode; // node = [rect, text] so we need parent
 
 		sankeyNode.classList.add('sel');
 		if (!isLink()) Caths.multiSel(dP.pointNumber); // sel all related links
 
-		Caths.clickPopupEl.className = ''; // clear
+		Caths.tapPopupEl.className = ''; // clear
 		var ids = Caths.getContextDataIds(dP);
 		if (ids[1] && ids[0] == ids[1]+'?') sankeyNode.classList.add('correct');
-		Caths.setContextClasses(Caths.clickPopupEl, ids);
+		Caths.setContextClasses(Caths.tapPopupEl, ids);
 
 		// set contents
 		var cd = dP.customdata;
-		Caths.clickPopupEl.innerHTML = (cd.join) ? cd.join('') : cd;
+		Caths.tapPopupEl.innerHTML = (cd.join) ? cd.join('') : cd;
 
 		// show (if not yet)
-		var d = window.getComputedStyle(Caths.clickPopupEl).getPropertyValue('display');
+		var d = window.getComputedStyle(Caths.tapPopupEl).getPropertyValue('display');
 		if (d == 'none') {
-			Caths.clickPopupEl.style.display = 'block';
+			Caths.tapPopupEl.style.display = 'block';
 			setTimeout(() => {
-				Caths.clickPopupEl.style.opacity = 1;
-				Caths.clickPopupEl.style.bottom = 0;
+				Caths.tapPopupEl.style.opacity = 1;
+				Caths.tapPopupEl.style.bottom = 0;
 			}, 1);
 		}
 
 	});
 
-	// Hide popup when clicking outside
-	window.addEventListener('click', Caths.click);
-
+	if (!Caths.haveSetupTapInteractivity) { // only once please
+		// Dismiss popup when tapping outside
+		document.body.addEventListener('pointerdown', Caths.tap);
+		Caths.haveSetupTapInteractivity = true;
+	}
 }
 
-Caths.click = (e) => {
+Caths.tap = (e) => {
 	if (Caths.inMobileMode()) {
 		var t = e.target;
-		if (!(['path', 'rect', 'text'].includes(t.nodeName))
-			|| t.classList.contains('bgsankey')) {
-			Caths.hideClickPopup();
+		if (t.id != 'caths-tappopup' &&
+			(!(['path', 'rect', 'text'].includes(t.nodeName))
+			|| t.classList.contains('bgsankey'))) {
+			Caths.hideTapPopup();
 		}
 	}
 };
@@ -782,17 +782,17 @@ Caths.removeHighlight = () => {
 	Caths.baseEl.classList.remove('highlight-is');
 }
 
-Caths.hideClickPopup = () => {
+Caths.hideTapPopup = () => {
 	Caths.removeHighlight();
 
 	// desel all
 	var sels = Caths.baseEl.getElementsByClassName('sel');
 	Array.from(sels).forEach((s) => { s.classList.remove('sel'); });
 
-	Caths.clickPopupEl.style.opacity = 0;
-	Caths.clickPopupEl.style.bottom = '-100px';
+	Caths.tapPopupEl.style.opacity = 0;
+	Caths.tapPopupEl.style.bottom = '-100px';
 	setTimeout(() => {
-		Caths.clickPopupEl.style.display = 'none';
+		Caths.tapPopupEl.style.display = 'none';
 	}, 300);
 }
 

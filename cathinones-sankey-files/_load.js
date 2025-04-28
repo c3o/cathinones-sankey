@@ -5,6 +5,7 @@ const CathsLoad = {
   script: (src, callback) => {
     const scriptTag = document.createElement('script');
     scriptTag.setAttribute('type', 'text/javascript');
+    if (window.location.search) src += window.location.search;
     scriptTag.src = src;
     scriptTag.onload = callback;
     document.body.appendChild(scriptTag);
@@ -13,6 +14,7 @@ const CathsLoad = {
     var ls = document.createElement('link');
     ls.rel = 'stylesheet';
     ls.setAttribute('type', 'text/css');
+    if (window.location.search) href += window.location.search;
     ls.href = href;
     document.getElementsByTagName('head')[0].appendChild(ls);
   }

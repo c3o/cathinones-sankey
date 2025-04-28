@@ -8,6 +8,8 @@
 }
 
 #caths-h1 {
+	/* Outside of #caths in presentation version –
+	may or may not be present */
 	text-align: center;
 	font-weight: 900;
 	color: #fff;
@@ -16,34 +18,33 @@
 }
 
 #caths {
-	background: #000;
-	color: #fff;
+	/*background: #000;*/
+	color: #666;
 	font-family: "Helvetica Neue LT Std", "Helvetica Neue", InterVariable, Inter, sans-serif;
 	margin: 2rem;
-	font-size: 22px;
 	text-align: center;
+	font-size: 14px; /* "Loading... text only */
 }
 #cathsform {
 	text-align: center;
 }
 #caths #caths-container {
-	/*width: 900px;*/
 	margin: 0 auto;
 	overflow: hidden;
 	margin-top: 1.5em;
+	font-size: 22px;	
 }
 #caths #caths-plot {
 	height: 475px;
-	/*width: 900px;*/
 	max-width: 1100px;
 	margin: 0 auto;
 }
 
 #caths #caths-as, #caths #caths-is {
 	text-align: center;
-	color: #777;
-	transition: all .2s;
-	font-weight: 900;
+	color: rgba(255, 255, 255, .5);
+	transition: all .15s;
+	font-weight: 700;
 }
 #caths #caths-is {
 	margin-top:.15em;
@@ -65,7 +66,7 @@
 	color: #fff;
 }
 
-#caths-clickpopup {
+#caths-tappopup {
 	display: none;
 	position: fixed;
 	opacity: 0;
@@ -74,17 +75,19 @@
 	left: 0;
 	width: 100%;
 	box-sizing: border-box;
-	background-color: rgba(0,0,0,.8);
+	background-color: rgba(30,30,30,.9);
+	border-top: 1px solid rgba(60,60,60,.9);
 	color: #fff;
-	padding: .6em .5em 1.2em .5em;
-	font-size:.8em;
+	padding: .6em .5em 1.5em .5em;
+	font-size: 18px;
 	backdrop-filter: blur(.3em);
 	font-weight: 400;
-	box-shadow: 0 -.3em .5em rgba(0,0,0,.4);
+	box-shadow: 0 -.2em .4em rgba(0,0,0,.4);
+	z-index: 999;
 }
 
 @media (min-width: 750px) {
-	#caths-clickpopup { display: none !important }
+	#caths-tappopup { display: none !important }
 }
 
 @media (max-width: 750px) {
@@ -95,8 +98,13 @@
 	#caths #caths-is { text-align:right }
 }
 
+#caths svg path {
+	transition: fill-opacity .25s;
+}
 
-#caths svg text { text-shadow: none !important }
+#caths svg text {
+	text-shadow: none !important;
+}
 
 #caths svg .sel {
 	/*filter: drop-shadow(0 0 .2em rgba(255, 255, 255, .5)) !important;*/
@@ -119,6 +127,11 @@
   	stroke: #fff !important;
   	stroke-opacity: .15 !important;
 }
+#caths svg g.hoverlayer path {
+	/*backdrop-filter: blur(.3em); doesn't work */
+	filter: drop-shadow(0 0 5px rgba(0, 0, 0, .4));
+	fill-opacity: .9 !important;
+}
 #caths svg g.hoverlayer g.hovertext {
 	/*visibility: hidden;*/
 	opacity: 0;
@@ -139,7 +152,7 @@
 	transform: translate(-10px, 10px);
 }
 #caths svg g.hoverlayer tspan:first-child tspan:first-child,
-#caths-clickpopup span:first-child {
+#caths-tappopup span:first-child {
 	font-size: 1.3em;
 	font-weight: 700;
 }
@@ -147,66 +160,66 @@
 	/*num ... fill: #999;*/
 }
 #caths svg g.hovertext tspan:last-child tspan:last-child,
-#caths-clickpopup span:last-of-type:not(:first-child) {
+#caths-tappopup span:last-of-type:not(:first-child) {
 	font-weight: bold;
 	font-size: 17px;
 }
 #caths svg g.hovertext.correct tspan:last-child tspan:last-child,
-#caths-clickpopup.correct span:last-of-type:not(:first-child) {
+#caths-tappopup.correct span:last-of-type:not(:first-child) {
 	font-weight: normal;
 }
 
 #caths svg g.hovertext.subst-2mmc tspan,
 #caths svg g.hovertext.as-2mmc.is-2mmc tspan,
 #caths svg g.hovertext.is-2mmc tspan:last-child tspan:last-child,
-#caths-clickpopup.subst-2mmc,
-#caths-clickpopup.as-2mmc.is-2mmc,
-#caths-clickpopup.is-2mmc span:last-of-type {
+#caths-tappopup.subst-2mmc,
+#caths-tappopup.as-2mmc.is-2mmc,
+#caths-tappopup.is-2mmc span:last-of-type {
 	fill: var(--col-2mmc);
 	color: var(--col-2mmc);
 }
 #caths svg g.hovertext.subst-3mmc tspan,
 #caths svg g.hovertext.as-3mmc.is-3mmc tspan,
 #caths svg g.hovertext.is-3mmc tspan:last-child tspan:last-child,
-#caths-clickpopup.subst-3mmc,
-#caths-clickpopup.as-3mmc.is-3mmc,
-#caths-clickpopup.is-3mmc span:last-of-type {
+#caths-tappopup.subst-3mmc,
+#caths-tappopup.as-3mmc.is-3mmc,
+#caths-tappopup.is-3mmc span:last-of-type {
 	fill: var(--col-3mmc);
 	color: var(--col-3mmc);
 }
 #caths svg g.hovertext.subst-4mmc tspan,
 #caths svg g.hovertext.as-4mmc.is-4mmc tspan,
 #caths svg g.hovertext.is-4mmc tspan:last-child tspan:last-child,
-#caths-clickpopup.subst-4mmc,
-#caths-clickpopup.as-4mmc.is-4mmc,
-#caths-clickpopup.is-4mmc span:last-of-type {
+#caths-tappopup.subst-4mmc,
+#caths-tappopup.as-4mmc.is-4mmc,
+#caths-tappopup.is-4mmc span:last-of-type {
 	fill: var(--col-4mmc);
 	color: var(--col-4mmc);
 }
 #caths svg g.hovertext.subst-3cmc tspan,
 #caths svg g.hovertext.as-3cmc.is-3cmc tspan,
 #caths svg g.hovertext.is-3cmc tspan:last-child tspan:last-child,
-#caths-clickpopup.subst-3cmc,
-#caths-clickpopup.as-3cmc.is-3cmc,
-#caths-clickpopup.is-3cmc span:last-of-type {
+#caths-tappopup.subst-3cmc,
+#caths-tappopup.as-3cmc.is-3cmc,
+#caths-tappopup.is-3cmc span:last-of-type {
 	fill: var(--col-3cmc);
 	color: var(--col-3cmc);
 }
 #caths svg g.hovertext.subst-4cmc tspan,
 #caths svg g.hovertext.as-4cmc.is-4cmc tspan,
 #caths svg g.hovertext.is-4cmc tspan:last-child tspan:last-child,
-#caths-clickpopup.subst-4cmc,
-#caths-clickpopup.as-4cmc.is-4cmc,
-#caths-clickpopup.is-4cmc span:last-of-type {
+#caths-tappopup.subst-4cmc,
+#caths-tappopup.as-4cmc.is-4cmc,
+#caths-tappopup.is-4cmc span:last-of-type {
 	fill: var(--col-4cmc);
 	color: var(--col-4cmc);
 }
 #caths svg g.hovertext.subst-dimethylpentylon tspan,
 #caths svg g.hovertext.as-dimethylpentylon.is-dimethylpentylon tspan,
 #caths svg g.hovertext.is-dimethylpentylon tspan:last-child tspan:last-child,
-#caths-clickpopup.subst-dimethylpentylon,
-#caths-clickpopup.as-dimethylpentylon.is-dimethylpentylon,
-#caths-clickpopup.is-dimethylpentylon span:last-of-type {
+#caths-tappopup.subst-dimethylpentylon,
+#caths-tappopup.as-dimethylpentylon.is-dimethylpentylon,
+#caths-tappopup.is-dimethylpentylon span:last-of-type {
 	fill: var(--col-dimethylpentylon);
 	color: var(--col-dimethylpentylon);
 }
