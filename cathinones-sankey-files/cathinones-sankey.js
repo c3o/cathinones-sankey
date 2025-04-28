@@ -10,13 +10,14 @@ Caths.s = {
 		mixVerbose: 'eine Mischung<br />verschiedener Cathinone',
 		other: 'andere Substanzen',
 		was: 'waren',
-		wasMostly: 'waren<br />(überwiegend)',
+		wasMostly: 'waren<br />überwiegend',
 		ofPresumed: 'der vermeintlichen',
 		samplesWereActually: '-Proben waren<br />in Wirklichkeit',
 		of: 'der',
 		samplesWereCorrect: '-<br />Proben waren <span>korrekt</span>',
 		ofSamples: 'der Proben',
 		pure: 'pur',
+		contaminated: 'davon verunreinigt',
 		were: 'waren',
 		supposed: 'wurde vermeintliches<br />',
 		submitted: 'zum Test gebracht',
@@ -33,13 +34,14 @@ Caths.s = {
 		mixVerbose: 'a mixture of<br />different cathinones',
 		other: 'other substances',
 		was: 'were',
-		wasMostly: '<br />were (primarily)',
+		wasMostly: '<br />were primarily',
 		ofPresumed: 'of presumed',
 		samplesWereActually: ' samples were<br />actually',
 		of: 'of',
 		samplesWereCorrect: '<br />samples were <span>correct</span>',
 		ofSamples: 'of the samples',
 		pure: 'pure',
+		contaminated: 'of them contaminated',
 		were: 'were',
 		supposed: 'samples submitted as<br />supposed ',
 		submitted: '',
@@ -286,13 +288,14 @@ Caths.defaultData = () => {
 		label: ['etc.', 'Mix'],
 		labelBr: ['etc.', 'Mix'],
 		color: [Caths.const.colors.etc, Caths.const.colors.mix],
-		hovertemplate: [ // [count/percent, middle, purity] (0 & 2 filled in at end)
+		hovertemplate: [ // [count/percent, (text), avg purity, %contaminated] (0 & 2 & 3 filled in at end)
 			[null, ''],
 			[null, ' '+Caths.s[Caths.lang].was+' '+Caths.toVerboseLabel('Mix')+'<extra></extra>']
 		],
 		count: {},
 		countSamples: 0,
 		purity: {},
+		contamination: {},
 		pairs: {},
 		etc: [],
 	};		
@@ -380,7 +383,7 @@ Caths.addToData = (id, label, col, htl) => {
 	if (labelTrans.length > 10) labelBr = labelTrans.replace('pentylon', '-<br />pentylon');
 	Caths.data.labelBr.push(labelBr);
 	Caths.data.color.push(col || Caths.const.colors['default']);
-	Caths.data.hovertemplate.push([null, htl, null]); // percent, template, avg. purity
+	Caths.data.hovertemplate.push([null, htl, null, null]); // percent, template, avg. purity, %contamined
 }
 
 Caths.saveSvg = () => {
@@ -497,6 +500,9 @@ Caths.parseData = () => {
 			if (!Caths.data.purity[isId]) Caths.data.purity[isId] = [];
 			Caths.data.purity[isId].push(found[0].pct);
 		}
+		if (found.length > 1) {
+			Caths.data.contamination[isId] = (Caths.data.contamination[isId]||0) + 1;
+		}
 
 		var foundStr = ''; // readable representation for debugging
 		found.forEach(f => {
@@ -606,9 +612,18 @@ Caths.setupPlot = () => {
 				var avg = Math.round(arr.reduce((a, b) => a + b) / arr.length);
 				h2 = '<br />&#8960; '+avg+'% '+Caths.s[Caths.lang].pure;
 			}
+
+			// contamination
+			h3 = '';
+			if (id != 'etc' && id != 'mix' && Caths.data.contamination[id]) {
+				var pct = Math.round((Caths.data.contamination[id] / Caths.data.count[id])*100);
+				h3 = (h2 == '') ? '<br />' : '; ';
+				h3 += pct+'% '+Caths.s[Caths.lang].contaminated;
+			}
 		}
 		Caths.data.hovertemplate[i][0] = h0;
 		Caths.data.hovertemplate[i][2] = h2;
+		Caths.data.hovertemplate[i][3] = h3;
 
 	});
 
@@ -634,7 +649,7 @@ Caths.renderPlot = () => {
 	  ids: Caths.data.ids,
 	  node: Object.assign({
 	    customdata: Caths.data.hovertemplate,
-	    hovertemplate: '%{customdata[0]}%{customdata[1]}%{customdata[2]}',
+	    hovertemplate: '%{customdata[0]}%{customdata[1]}%{customdata[2]}%{customdata[3]}',
 	   	hoverlabel: Caths.sankey.hoverlabel,
 	    label: Caths.data.labelBr,
 	    color: Caths.data.color,
