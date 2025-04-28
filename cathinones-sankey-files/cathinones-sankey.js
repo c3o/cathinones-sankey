@@ -400,11 +400,13 @@ Caths.parseData = () => {
 
 	Caths.defaultData();
 
+	// strip leading/trailing newlines & parse
 	var dcData;
-	if (d3.dsvFormat) {
-		dcData = d3.dsvFormat(";").parse(window.CathsCSV);
-	} else {
-		dcData = d3.dsv(';', 'text/plain').parse(window.CathsCSV);
+	var dcDataRaw = window.CathsCSV.replace(/^\s+|\s+$/g, '');
+	if (d3.dsvFormat) { // newer D3
+		dcData = d3.dsvFormat(";").parse(dcDataRaw);
+	} else { // older D3
+		dcData = d3.dsv(';', 'text/plain').parse(dcDataRaw);
 	}
 
 	dcData.forEach(d => {
