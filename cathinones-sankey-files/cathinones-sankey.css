@@ -12,12 +12,12 @@
 }
 body.caths-color-zurich-black #caths,
 body.caths-color-zurich-white #caths {
-	--col-2mmc: #bcdeae;
-	--col-3mmc: #2C2075;
-	--col-4mmc: #1b3d9b;
-	--col-3cmc: #bcdeae;
-	--col-4cmc: #bcdeae;
-	--col-dimethylpentylon: #bcdeae;
+	--col-2mmc: #BCE59E;
+	--col-3mmc: #351459;
+	--col-4mmc: #0F05A0;
+	--col-3cmc: #BCE59E;
+	--col-4cmc: #BCE59E;
+	--col-dimethylpentylon: #BCE59E;
 }
 body.caths-color-zurich-black #caths {
 	--col-hover-text: #FFFFFF;

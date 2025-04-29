@@ -41,7 +41,7 @@ Caths.s = {
 		samplesWereCorrect: '<br />samples were <span>correct</span>',
 		ofSamples: 'of the samples',
 		pure: 'substance purity',
-		contaminated: 'of which contained further substances',
+		contaminated: 'contained further substances',
 		were: 'were',
 		supposed: 'samples submitted as<br />supposed ',
 		submitted: '',
@@ -83,36 +83,36 @@ Caths.colors = {
 	},
 	'zurich-black': {
 		'text': '#ffffff',
-		'default': '#bcdeae',
+		'default': '#BCE59E',
 		'defaultLink': '#666666',
 		'linkDefaultOpacity': 70,
 		'linkCorrectOpacity': 90,
-		'2-MMC': '#bcdeae',
-		'3-MMC': '#2C2075',
-		'3-CMC': '#bcdeae',
-		'4-MMC': '#1b3d9b',
-		'4-CMC': '#bcdeae',
-		'Dimethylpentylon': '#bcdeae',
-		'etc': '#bcdeae',
-		'mix': '#bcdeae',
+		'2-MMC': '#BCE59E',
+		'3-MMC': '#351459',
+		'3-CMC': '#BCE59E',
+		'4-MMC': '#0F05A0',
+		'4-CMC': '#BCE59E',
+		'Dimethylpentylon': '#BCE59E',
+		'etc': '#BCE59E',
+		'mix': '#BCE59E',
 		'hoverText': '#ffffff',
 		'hoverBg': '#202020FF'
 
 	},
 	'zurich-white': {
 		'text': '#ffffff',
-		'default': '#bcdeae',
+		'default': '#BCE59E',
 		'defaultLink': '#666666',
 		'linkDefaultOpacity': 30,
 		'linkCorrectOpacity': 50,
-		'2-MMC': '#bcdeae',
-		'3-MMC': '#2C2075',
-		'3-CMC': '#bcdeae',
-		'4-MMC': '#1b3d9b',
-		'4-CMC': '#bcdeae',
-		'Dimethylpentylon': '#bcdeae',
-		'etc': '#bcdeae',
-		'mix': '#bcdeae',
+		'2-MMC': '#BCE59E',
+		'3-MMC': '#351459',
+		'3-CMC': '#BCE59E',
+		'4-MMC': '#0F05A0',
+		'4-CMC': '#BCE59E',
+		'Dimethylpentylon': '#BCE59E',
+		'etc': '#BCE59E',
+		'mix': '#BCE59E',
 		'hoverText': '#000000',
 		'hoverBg': '#FFFFFF'
 	},
@@ -239,6 +239,7 @@ Caths.setup = () => {
 		Caths.tapPopupEl = document.getElementById(Caths.const.tapPopupElId);
 
 		Caths.lang = (window.Weglot && Weglot.getCurrentLang())
+			|| localStorage.getItem('caths-lang')
 			|| Caths.baseEl.getAttribute('lang')
 			|| Caths.lang;
 
@@ -301,6 +302,7 @@ Caths.settings = {
 
 Caths.setLang = (val) => {
 	Caths.lang = val;
+	localStorage.setItem('caths-lang', val);
 	Caths.load();
 };
 if (window.Weglot) {
