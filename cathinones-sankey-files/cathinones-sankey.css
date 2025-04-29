@@ -1,10 +1,57 @@
- #caths {
-  --col-2mmc: #DD44AA;
-  --col-3mmc: #44AADD;
-  --col-4mmc: #DDBB44;
-  --col-3cmc: #6050F6;
-  --col-4cmc: #CC7744;
-  --col-dimethylpentylon: #44DD77;
+#caths {
+	--col-2mmc: #DD44AA;
+	--col-3mmc: #44AADD;
+	--col-4mmc: #DDBB44;
+	--col-3cmc: #6050F6;
+	--col-4cmc: #CC7744;
+	--col-dimethylpentylon: #44DD77;
+	--col-hover-bg: rgba(30,30,30,.9);
+	--col-hover-text: #fff;
+	--col-hover-border: rgba(60,60,60,.9);
+
+}
+body.caths-color-zurich-black #caths,
+body.caths-color-zurich-white #caths {
+	--col-2mmc: #bcdeae;
+	--col-3mmc: #2C2075;
+	--col-4mmc: #1b3d9b;
+	--col-3cmc: #bcdeae;
+	--col-4cmc: #bcdeae;
+	--col-dimethylpentylon: #bcdeae;
+}
+body.caths-color-zurich-black #caths {
+	--col-hover-text: #FFFFFF;
+}
+body.caths-color-zurich-white #caths {
+	--col-hover-bg: rgba(255,255,255,.8);
+	--col-hover-border: rgba(200,200,200,.8);
+	--col-hover-text: #000;
+	--col-hover-hilite: #A3BA88;
+}
+body.caths-color-default,
+body.caths-color-zurich-black {
+	background: #000;
+}
+body.caths-color-zurich-white #cathsform input,
+body.caths-color-zurich-white #cathsform select,
+body.caths-color-zurich-white #cathsform button {
+	background: #eee;
+	color: #666;
+}
+body.caths-color-zurich-white #caths #caths-as,
+body.caths-color-zurich-white #caths #caths-is {
+	color: #000;
+}
+body.caths-color-zurich-black #caths.format-desktop svg .sankey-node .node-label:not(.node3mmc):not(.node4mmc),
+body.caths-color-zurich-white #caths.format-mobile svg .sankey-node .node-label,
+body.caths-color-zurich-white #caths svg .sankey-node .node-label:not(.node3mmc):not(.node4mmc) {
+	fill: #000 !important;
+}
+body.caths-color-zurich-white {
+	background: #FFF;
+}
+body.caths-color-zurich-white #caths-h1 {
+	color: #000;
 }
 
 #caths-h1 {
@@ -15,41 +62,91 @@
 	color: #fff;
 	font-family: "Helvetica Neue LT Std", "Helvetica Neue", InterVariable, Inter, sans-serif;
 	font-size: 2.8em;
+	line-height: 1.3em;
+	transition: all .15s;
+	margin-bottom: 0;
 }
 
 #caths {
 	/*background: #000;*/
 	color: #666;
 	font-family: "Helvetica Neue LT Std", "Helvetica Neue", InterVariable, Inter, sans-serif;
-	margin: 2rem;
+	margin: 1rem;
 	text-align: center;
 	font-size: 14px; /* "Loading... text only */
 }
+
 #cathsform {
 	text-align: center;
 }
+#cathsform input, #cathsform select, #cathsform button {
+	background: #333;
+	color: #999;
+	border: 0;
+	padding: 4px 15px;
+	border-radius: 1em;
+	margin-bottom: 10px;
+}
+#cathsform button {
+	box-shadow: inset 0 -.2rem .1rem rgba(0,0,0,.3);
+	cursor: pointer;
+}
+#cathsform button:hover {
+	box-shadow: inset 0 .1rem .1rem rgba(0,0,0,.2);
+	cursor: pointer;
+	color: #fff;
+}
+
 #caths #caths-container {
 	margin: 0 auto;
 	overflow: hidden;
-	margin-top: 1.5em;
+	margin-top: 1.1rem;
 	font-size: 22px;	
 }
+
+@media (max-width: 750px) {
+	#caths-h1 {
+		font-size: 1.7em;
+		margin-top: 1em;
+		margin-bottom: 0em;
+	}
+	#cathsform {
+		/* Compensate for tappopup: Still allow scrolling to end */
+		padding-top: .5rem;
+		padding-bottom: 4rem;
+	}
+	#cathsform input, #cathsform select, #cathsform button {
+		font-size: 1rem;
+	}
+	#caths #caths-as, #caths #caths-is {
+		font-size: .8em;
+	}
+	#caths #caths-container {
+		margin-top: 1em;
+	}
+	#caths #caths-is {
+		margin-top:.15em;
+	}
+}
+
 #caths #caths-plot {
 	height: 475px;
 	max-width: 1100px;
 	margin: 0 auto;
 }
 
-#caths #caths-as, #caths #caths-is {
+#caths #caths-as,
+#caths #caths-is {
 	text-align: center;
 	color: rgba(255, 255, 255, .5);
 	transition: all .15s;
 	font-weight: 700;
 }
-#caths #caths-is {
-	margin-top:.15em;
+#caths.format-desktop #caths-as {
+	margin-bottom: .2em;
 }
-#caths #caths-as:before, #caths #caths-is:after {
+#caths #caths-as:before,
+#caths #caths-is:after {
 	content: "➔";
 	display: inline-block;
 	margin: 0 .4em;
@@ -75,15 +172,26 @@
 	left: 0;
 	width: 100%;
 	box-sizing: border-box;
-	background-color: rgba(30,30,30,.9);
-	border-top: 1px solid rgba(60,60,60,.9);
-	color: #fff;
+	background-color: var(--col-hover-bg);
+	border-top: 1px solid var(--col-hover-border);
+	color: var(--col-hover-text);
 	padding: .6em .5em 1.5em .5em;
 	font-size: 18px;
 	backdrop-filter: blur(.3em);
 	font-weight: 400;
 	box-shadow: 0 -.2em .4em rgba(0,0,0,.4);
 	z-index: 999;
+}
+#caths-tappopup .extra {
+	margin-top:.5em;
+	font-size:.9em;
+	opacity:.6;
+}
+
+#caths img#caths-export[src] {
+	border: 1px dotted #999;
+	width: 50%;
+	margin-top: 1.3rem;
 }
 
 @media (min-width: 750px) {
@@ -169,59 +277,79 @@
 	font-weight: normal;
 }
 
-#caths svg g.hovertext.subst-2mmc tspan,
-#caths svg g.hovertext.as-2mmc.is-2mmc tspan,
+/*#caths svg g.hovertext.subst-2mmc tspan,*/
+/*#caths svg g.hovertext.as-2mmc.is-2mmc tspan,*/
 #caths svg g.hovertext.is-2mmc tspan:last-child tspan:last-child,
-#caths-tappopup.subst-2mmc,
-#caths-tappopup.as-2mmc.is-2mmc,
+/*#caths-tappopup.subst-2mmc,*/
+/*#caths-tappopup.as-2mmc.is-2mmc,*/
 #caths-tappopup.is-2mmc span:last-of-type {
 	fill: var(--col-2mmc);
 	color: var(--col-2mmc);
 }
-#caths svg g.hovertext.subst-3mmc tspan,
-#caths svg g.hovertext.as-3mmc.is-3mmc tspan,
+/*#caths svg g.hovertext.subst-3mmc tspan,*/
+/*#caths svg g.hovertext.as-3mmc.is-3mmc tspan,*/
 #caths svg g.hovertext.is-3mmc tspan:last-child tspan:last-child,
-#caths-tappopup.subst-3mmc,
-#caths-tappopup.as-3mmc.is-3mmc,
+/*#caths-tappopup.subst-3mmc,*/
+/*#caths-tappopup.as-3mmc.is-3mmc,*/
 #caths-tappopup.is-3mmc span:last-of-type {
 	fill: var(--col-3mmc);
 	color: var(--col-3mmc);
 }
-#caths svg g.hovertext.subst-4mmc tspan,
-#caths svg g.hovertext.as-4mmc.is-4mmc tspan,
+/*#caths svg g.hovertext.subst-4mmc tspan,*/
+/*#caths svg g.hovertext.as-4mmc.is-4mmc tspan,*/
 #caths svg g.hovertext.is-4mmc tspan:last-child tspan:last-child,
-#caths-tappopup.subst-4mmc,
-#caths-tappopup.as-4mmc.is-4mmc,
+/* #caths-tappopup.subst-4mmc, */
+/*#caths-tappopup.as-4mmc.is-4mmc,*/
 #caths-tappopup.is-4mmc span:last-of-type {
 	fill: var(--col-4mmc);
 	color: var(--col-4mmc);
 }
-#caths svg g.hovertext.subst-3cmc tspan,
-#caths svg g.hovertext.as-3cmc.is-3cmc tspan,
+/*#caths svg g.hovertext.subst-3cmc tspan,*/
+/*#caths svg g.hovertext.as-3cmc.is-3cmc tspan,*/
 #caths svg g.hovertext.is-3cmc tspan:last-child tspan:last-child,
-#caths-tappopup.subst-3cmc,
-#caths-tappopup.as-3cmc.is-3cmc,
+/*#caths-tappopup.subst-3cmc,*/
+/*#caths-tappopup.as-3cmc.is-3cmc,*/
 #caths-tappopup.is-3cmc span:last-of-type {
 	fill: var(--col-3cmc);
 	color: var(--col-3cmc);
 }
-#caths svg g.hovertext.subst-4cmc tspan,
-#caths svg g.hovertext.as-4cmc.is-4cmc tspan,
+/*#caths svg g.hovertext.subst-4cmc tspan,*/
+/*#caths svg g.hovertext.as-4cmc.is-4cmc tspan,*/
 #caths svg g.hovertext.is-4cmc tspan:last-child tspan:last-child,
-#caths-tappopup.subst-4cmc,
-#caths-tappopup.as-4cmc.is-4cmc,
+/*#caths-tappopup.subst-4cmc,*/
+/*#caths-tappopup.as-4cmc.is-4cmc,*/
 #caths-tappopup.is-4cmc span:last-of-type {
 	fill: var(--col-4cmc);
 	color: var(--col-4cmc);
 }
-#caths svg g.hovertext.subst-dimethylpentylon tspan,
-#caths svg g.hovertext.as-dimethylpentylon.is-dimethylpentylon tspan,
+/*#caths svg g.hovertext.subst-dimethylpentylon tspan,*/
+/*#caths svg g.hovertext.as-dimethylpentylon.is-dimethylpentylon tspan,*/
 #caths svg g.hovertext.is-dimethylpentylon tspan:last-child tspan:last-child,
-#caths-tappopup.subst-dimethylpentylon,
-#caths-tappopup.as-dimethylpentylon.is-dimethylpentylon,
+/*#caths-tappopup.subst-dimethylpentylon,*/
+/*#caths-tappopup.as-dimethylpentylon.is-dimethylpentylon,*/
 #caths-tappopup.is-dimethylpentylon span:last-of-type {
 	fill: var(--col-dimethylpentylon);
 	color: var(--col-dimethylpentylon);
 }
 
-
+body.caths-color-zurich-white #caths svg g.hovertext.is-2mmc tspan:last-child tspan:last-child,
+body.caths-color-zurich-white #caths svg g.hovertext.is-3cmc tspan:last-child tspan:last-child,
+body.caths-color-zurich-white #caths svg g.hovertext.is-etc tspan:last-child tspan:last-child,
+body.caths-color-zurich-white #caths svg g.hovertext.is-mix tspan:last-child tspan:last-child,
+body.caths-color-zurich-white #caths svg g.hovertext.is-4cmc tspan:last-child tspan:last-child,
+body.caths-color-zurich-white #caths svg g.hovertext.is-mdma tspan:last-child tspan:last-child,
+body.caths-color-zurich-white #caths svg g.hovertext.is-dimethylpentylon tspan:last-child tspan:last-child,
+#caths-tappopup.is-2mmc span:last-of-type,
+#caths-tappopup.is-3cmc span:last-of-type,
+#caths-tappopup.is-etc span:last-of-type,
+#caths-tappopup.is-mix span:last-of-type,
+#caths-tappopup.is-4cmc span:last-of-type,
+#caths-tappopup.is-mdma span:last-of-type,
+#caths-tappopup.is-dimethylpentylon span:last-of-type,
+body.caths-color-zurich-black #caths svg g.hovertext.as-3mmc.is-3mmc tspan,
+body.caths-color-zurich-black #caths svg g.hovertext.as-4mmc.is-4mmc tspan,
+body.caths-color-zurich-black #caths-tappopup.is-3mmc span:last-of-type,
+body.caths-color-zurich-black #caths-tappopup.is-4mmc span:last-of-type {
+	fill: var(--col-hover-hilite);
+	color: var(--col-hover-hilite);
+}

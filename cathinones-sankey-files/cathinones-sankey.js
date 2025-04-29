@@ -6,7 +6,7 @@ window.Caths = {};
 Caths.lang = 'de';
 Caths.s = {
 	'de': {
-		h1: 'Was war 2024 wirklich in „Mephi“?',
+		h1: 'Was war 2024 wirklich<br />in Cathinon-Proben?',
 		mixVerbose: 'eine Mischung<br />verschiedener Cathinone',
 		other: 'andere Substanzen',
 		was: 'waren',
@@ -16,11 +16,11 @@ Caths.s = {
 		of: 'der',
 		samplesWereCorrect: '-<br />Proben waren <span>korrekt</span>',
 		ofSamples: 'der Proben',
-		pure: 'pur',
-		contaminated: 'davon verunreinigt',
+		pure: 'Wirkstoffgehalt',
+		contaminated: 'davon mit weiteren Substanzen',
 		were: 'waren',
 		supposed: 'wurde vermeintliches<br />',
-		submitted: 'zum Test gebracht',
+		submitted: 'analysiert',
 		cocaine: 'Kokain',
 		caffeine: 'Koffein',
 		none: 'keine',
@@ -30,7 +30,7 @@ Caths.s = {
 		is: 'Testergebnis',
 	},
 	'en': {
-		h1: 'What was really in “mephedrone” in 2024?',
+		h1: 'What was really in<br />cathinone samples in 2024?',
 		mixVerbose: 'a mixture of<br />different cathinones',
 		other: 'other substances',
 		was: 'were',
@@ -40,8 +40,8 @@ Caths.s = {
 		of: 'of',
 		samplesWereCorrect: '<br />samples were <span>correct</span>',
 		ofSamples: 'of the samples',
-		pure: 'pure',
-		contaminated: 'of them contaminated',
+		pure: 'substance purity',
+		contaminated: 'of which contained further substances',
 		were: 'were',
 		supposed: 'samples submitted as<br />supposed ',
 		submitted: '',
@@ -60,13 +60,16 @@ Caths.s = {
 			'keine': 'none',
 		},
 	},
-}
+};
 
-Caths.const = {
-	font: '"Helvetica Neue LT Std", "Helvetica Neue", InterVariable, Inter, sans-serif',
-	colors: {
+Caths.colorScheme = 'default';
+Caths.colors = {
+	'default': { // Safer Party
+		'text': '#FFFFFF',
 		'default': '#666670',
-		'defaultLink': '#A0AFC350',
+		'defaultLink': '#A0AFC3',
+		'linkDefaultOpacity': 50,
+		'linkCorrectOpacity': 80,
 		'2-MMC': '#CC3399',
 		'3-MMC': '#3399CC',
 		'3-CMC': '#5040E6',
@@ -75,7 +78,48 @@ Caths.const = {
 		'Dimethylpentylon': '#33CC66',
 		'etc': '#999999',
 		'mix': '#666670',
+		'hoverText': '#ffffff',
+		'hoverBg': '#202020FF'
 	},
+	'zurich-black': {
+		'text': '#ffffff',
+		'default': '#bcdeae',
+		'defaultLink': '#666666',
+		'linkDefaultOpacity': 70,
+		'linkCorrectOpacity': 90,
+		'2-MMC': '#bcdeae',
+		'3-MMC': '#2C2075',
+		'3-CMC': '#bcdeae',
+		'4-MMC': '#1b3d9b',
+		'4-CMC': '#bcdeae',
+		'Dimethylpentylon': '#bcdeae',
+		'etc': '#bcdeae',
+		'mix': '#bcdeae',
+		'hoverText': '#ffffff',
+		'hoverBg': '#202020FF'
+
+	},
+	'zurich-white': {
+		'text': '#ffffff',
+		'default': '#bcdeae',
+		'defaultLink': '#666666',
+		'linkDefaultOpacity': 30,
+		'linkCorrectOpacity': 50,
+		'2-MMC': '#bcdeae',
+		'3-MMC': '#2C2075',
+		'3-CMC': '#bcdeae',
+		'4-MMC': '#1b3d9b',
+		'4-CMC': '#bcdeae',
+		'Dimethylpentylon': '#bcdeae',
+		'etc': '#bcdeae',
+		'mix': '#bcdeae',
+		'hoverText': '#000000',
+		'hoverBg': '#FFFFFF'
+	},
+};
+
+Caths.const = {
+	font: '"Helvetica Neue LT Std", "Helvetica Neue", InterVariable, Inter, sans-serif',
 	//size: { width: 900, height: 475 }, // responsive
 	baseElId: 'caths',
 	plotElId: 'caths-plot',
@@ -123,6 +167,7 @@ Caths.const = {
 		'4cmc?',
 	],	
 };
+
 Caths.sankey = {
 	dataMergeIn: {
 		type: "sankey",
@@ -142,7 +187,11 @@ Caths.sankey = {
 	    line: { width: 0 },
 	},
 	layout: {
-		font: { size: 18, color: '#ffffff', family: Caths.const.font },
+		font: {
+			size: 18,
+			color: Caths.colors[Caths.colorScheme].text,
+			family: Caths.const.font
+		},
 		plot_bgcolor: 'transparent',
 		paper_bgcolor: 'transparent',
 		transition: { duration: 0 }, // doesn't work
@@ -151,13 +200,9 @@ Caths.sankey = {
 	config: {
 		displayModeBar: false,
 		responsive: false, // implemented my own, with a breakpoint
-	},
-	hoverlabel: {
-		bgcolor: '#202020FF',
-		bordercolor: '#202020FF',
-		font: { color: '#ffffff', size: 16, family: Caths.const.font },
-	},
+	}
 };
+
 
 Caths.plot = null; // Plotly object
 Caths.baseEl = null;
@@ -169,6 +214,14 @@ Caths.setup = () => {
 	if (!window.Plotly) { error += 'Fehler: Bibliothek Plotly nicht geladen!<br />'; }
 	if (!window.CathsCSV) { error += 'Fehler: Cathinon-Daten nicht geladen!<br />'; }
 
+	// Initialize color scheme from localStorage, option or body class
+	if (localStorage.getItem('caths-colorScheme')) {
+		Caths.setColorScheme(localStorage.getItem('caths-colorScheme'));
+	} else if (document.getElementById('caths-setting-colorScheme')) {
+		let s = document.getElementById('caths-setting-colorScheme');
+		Caths.setColorScheme(s.options[s.selectedIndex].value);
+	}
+
 	Caths.baseEl = document.getElementById(Caths.const.baseElId);
 	if (error != '') {
 		Caths.baseEl.innerHTML = error;
@@ -179,7 +232,7 @@ Caths.setup = () => {
 				<div id="caths-plot"></div>
 				<div id="caths-is">&nbsp;</div>
 			</div>
-			<img id="caths-export" />
+			<img id="caths-export" title="Rechtsklick => Speichern unter..." />
 			<div id="caths-tappopup"></div>`;
 
 		Caths.plot = document.getElementById(Caths.const.plotElId);
@@ -191,14 +244,14 @@ Caths.setup = () => {
 
 		Caths.load();
 	}
-}
+};
 
 Caths.load = () => {
 	Caths.initSettingsAndLang();
 	Caths.parseData();
 	Caths.setupPlot();
 	Caths.renderPlot();
-}
+};
 
 
 // Responsiveness
@@ -207,7 +260,7 @@ Caths.lastInnerWidth = null;
 
 Caths.inMobileMode = () => {
 	return (window.innerWidth <= Caths.const.breakpoint);
-}
+};
 
 window.addEventListener('resize', () => {
 	var diff = Math.abs(Caths.lastInnerWidth-window.innerWidth);
@@ -216,22 +269,26 @@ window.addEventListener('resize', () => {
 
 // TODO: Could do this more declaratively & merge in renderPlot
 Caths.mobileLayout = () => {
+	Caths.baseEl.classList.remove('format-desktop');
+	Caths.baseEl.classList.add('format-mobile');
 	var w = Caths.plot.offsetWidth;
 	Caths.const.size = { width: w, height: 600 };
 	Caths.plot.style.height = Caths.const.size.height+'px';
 	Caths.sankey.dataMergeIn.orientation = 'h';
 	Caths.sankey.layout.margin = { l: 2, r: 2, t: 0, b: 20 };
 	Caths.sankey.nodeMergeIn.pad = 22;
-}
+};
 Caths.desktopLayout = () => {
+	Caths.baseEl.classList.remove('format-mobile');
+	Caths.baseEl.classList.add('format-desktop');
 	var w = Caths.plot.offsetWidth;
 	var h = w / 2.3 + 50;
 	Caths.const.size = { width: w, height: h };
 	Caths.plot.style.height = h+'px';
 	Caths.sankey.dataMergeIn.orientation = 'v';
-	Caths.sankey.layout.margin = { l: 20, r: 20, t: 20, b: 20 };
-	Caths.sankey.nodeMergeIn.pad = 30;
-}
+	Caths.sankey.layout.margin = { l: 20, r: 20, t: 20, b: 30 };
+	Caths.sankey.nodeMergeIn.pad =  30;
+};
 
 // Settings
 
@@ -240,34 +297,45 @@ Caths.haveSetupTapInteractivity = false;
 Caths.settings = {
 	includeRCs: 0,
 	showMonths: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], // 0 = no date
-}
+};
 
 Caths.setLang = (val) => {
 	Caths.lang = val;
 	Caths.load();
-}
+};
 if (window.Weglot) {
 	Weglot.on("languageChanged", Caths.setLang);
 }
+
+Caths.setColorScheme = (val, reload) => {
+	Caths.colorScheme = val;
+	Caths.sankey.layout.font.color = Caths.colors[Caths.colorScheme].text;
+	document.body.className = document.body.className.replace(/caths-color-[^ ]*/, '');
+	document.body.classList.add('caths-color-'+val);
+	localStorage.setItem('caths-colorScheme', val);
+	if (reload) Caths.load();
+};
 
 // for changing sankey setup (e.g. what data to show)
 Caths.set = (s, val) => {
 	Caths.settings[s] = parseInt(val, 10);
 	Caths.setupPlot();
 	Caths.renderPlot();
-}
+};
 
 // for changing data (e.g. which timeframe to consider)
 Caths.setAndReload = (s, val) => {
 	Caths.settings[s] = val;
 	Caths.load();
-}
+};
 
 Caths.initSettingsAndLang = () => {
-	var sel = document.getElementById('setting-includeRCs');
+	var sel = document.getElementById('caths-setting-includeRCs');
 	if (sel) sel.value = Caths.settings.includeRCs;
-	var sel = document.getElementById('setting-lang');
+	var sel = document.getElementById('caths-setting-lang');
 	if (sel) sel.value = Caths.lang;
+	var sel = document.getElementById('caths-setting-colorScheme');
+	if (sel) sel.value = Caths.colorScheme;
 
 	Caths.baseEl.setAttribute('lang', Caths.lang);
 
@@ -275,7 +343,7 @@ Caths.initSettingsAndLang = () => {
 	Caths.innerHTML('caths-as', Caths.s[Caths.lang].as);
 	Caths.innerHTML('caths-is', Caths.s[Caths.lang].is);
 
-}
+};
 
 
 // Data
@@ -287,7 +355,7 @@ Caths.defaultData = () => {
 		ids: ['etc', 'mix'], // prepopulate special entries
 		label: ['etc.', 'Mix'],
 		labelBr: ['etc.', 'Mix'],
-		color: [Caths.const.colors.etc, Caths.const.colors.mix],
+		color: [Caths.colors[Caths.colorScheme].etc, Caths.colors[Caths.colorScheme].mix],
 		hovertemplate: [ // [count/percent, (text), avg purity, %contaminated] (0 & 2 & 3 filled in at end)
 			[null, ''],
 			[null, ' '+Caths.s[Caths.lang].was+' '+Caths.toVerboseLabel('Mix')+'<extra></extra>']
@@ -299,62 +367,74 @@ Caths.defaultData = () => {
 		pairs: {},
 		etc: [],
 	};		
-}
+};
 
 
 // Helpers
 
+Caths.hoverLabel = () => {
+	return {
+		bgcolor: Caths.colors[Caths.colorScheme].hoverBg,
+		bordercolor: Caths.colors[Caths.colorScheme].hoverBg,
+		font: {
+			color: Caths.colors[Caths.colorScheme].hoverText,
+			size: 16,
+			family: Caths.const.font
+		}
+	}
+};
+
 Caths.innerHTML = (el, html) => {
 	var e = document.getElementById(el);
 	if (e) e.innerHTML = html;
-}
+};
 
 Caths.normalizeSubst = (s) => {
 	Caths.const.substCleanup.forEach(c => {
 		s = s.replace(c[0], c[1]);
 	});
 	return s;
-}
+};
 
 Caths.toId = (x) => {
 	return x.toLowerCase().replace('-', '');
-}
+};
 
 Caths.toFloat = (s) => {
 	return (s == '' || s == '0,0') ? null : parseFloat(s.replace(',','.'));
-}
+};
 
 Caths.toPercent = (a, b) => {
 	return Math.round((a/b)*100);
-}
+};
 
 Caths.toMaybeLabel = (s) => {
 	return Caths.s[Caths.lang].quoteStart + s + Caths.s[Caths.lang].quoteEnd;
-}
+};
 
 Caths.isIrrelevant = (subst) => {
 	return Caths.const.substIrrelevant.some(a => {
 		return subst.includes(a);
 	});
-}
+};
 
 Caths.isCathinone = (subst) => {
 	return Caths.const.substCathinones.some(a => {
 		return subst.includes(a);
 	});
-}
+};
 
 Caths.isAllCathinones = (found) => {
 	return found.every(f => {
 		return (Caths.isCathinone(f.subst) || Caths.isIrrelevant(f.subst));
 	});
-}
+};
 
 Caths.toVerboseLabel = (l) => {
 	if (l == 'Mix' ) l = Caths.s[Caths.lang].mixVerbose;
 	if (l == 'etc.') l = Caths.s[Caths.lang].other;
 	return l;
-}
+};
 
 Caths.joinWithBr = (arr, joiner) => {
 	var out = '';
@@ -382,9 +462,9 @@ Caths.addToData = (id, label, col, htl) => {
 	var labelBr = labelTrans;
 	if (labelTrans.length > 10) labelBr = labelTrans.replace('pentylon', '-<br />pentylon');
 	Caths.data.labelBr.push(labelBr);
-	Caths.data.color.push(col || Caths.const.colors['default']);
+	Caths.data.color.push(col || Caths.colors[Caths.colorScheme]['default']);
 	Caths.data.hovertemplate.push([null, htl, null, null]); // percent, template, avg. purity, %contamined
-}
+};
 
 Caths.saveSvg = () => {
 	Plotly.toImage(
@@ -394,7 +474,7 @@ Caths.saveSvg = () => {
 		var img_svg = document.getElementById(Caths.const.exportElId);
     	img_svg.setAttribute("src", url);
 	});
-}
+};
 
 
 // The Main Event
@@ -426,7 +506,7 @@ Caths.parseData = () => {
 			Caths.addToData(
 				asId,
 				Caths.toMaybeLabel(as),
-				Caths.const.colors[as],
+				Caths.colors[Caths.colorScheme][as],
 				' '+Caths.s[Caths.lang].supposed+Caths.translateSubstance(as)+' '+Caths.s[Caths.lang].submitted+'<extra></extra>'
 			);
 		}
@@ -481,7 +561,7 @@ Caths.parseData = () => {
 			Caths.addToData(
 				isId,
 				found[0].subst,
-				Caths.const.colors[found[0].subst],
+				Caths.colors[Caths.colorScheme][found[0].subst],
 				' '+Caths.s[Caths.lang].wasMostly+' '+Caths.translateSubstance(found[0].subst)+
 				'<extra></extra>'
 			);
@@ -522,7 +602,7 @@ Caths.setupPlot = () => {
 		value: [],
 		color: [],
 		hovertemplate: '%{customdata}',
-		hoverlabel: Caths.sankey.hoverlabel,
+		hoverlabel: Caths.hoverLabel(),
 		customdata: [],
 		//arrowlen: 30,
 	}
@@ -568,7 +648,8 @@ Caths.setupPlot = () => {
 			Caths.data.link.value.push(pairs[asId][isId]);
 			
 			var pct = Caths.toPercent(pairs[asId][isId], Caths.data.count[asId]);
-			var col = Caths.const.colors.defaultLink; // default
+			var col = Caths.colors[Caths.colorScheme].defaultLink +
+					  Caths.colors[Caths.colorScheme].linkDefaultOpacity; // default
 			var isLabel = Caths.data.label[isIdX];
 			var isLabelV = Caths.toVerboseLabel(isLabel);
 			
@@ -579,7 +660,8 @@ Caths.setupPlot = () => {
 			// submitted-as matches result
 			// (converting isLabel into asLabel-format to check for match)
 			if (Caths.data.label[asIdX] == Caths.toMaybeLabel(isLabel)) {
-				col = Caths.const.colors[isLabel]+'80'; // 80% opacity
+				col = Caths.colors[Caths.colorScheme][isLabel] +
+					  Caths.colors[Caths.colorScheme].linkCorrectOpacity;
 				htl = '<span>'+pct+'%</span> <span>('+pairs[asId][isId]+')</span>'+
 					  ' '+Caths.s[Caths.lang].of+' '+isLabel+Caths.s[Caths.lang].samplesWereCorrect+'<extra></extra>';
 			}
@@ -597,16 +679,17 @@ Caths.setupPlot = () => {
 		
 		if (id.includes('?')) { // as
 			
-			h0 = '<span>'+Caths.data.count[id] + '&times;</span>';
-			h2 = '';
+			var h0 = '<span>'+Caths.data.count[id] + '&times;</span>';
+			var h2 = '';
+			var h3 = '';
 		
 		} else { // is
 		
-			h0 = '<span>'+Caths.toPercent(countIs[id], countSamples) +
+			var h0 = '<span>'+Caths.toPercent(countIs[id], countSamples) +
 				'%</span> <span>(' + countIs[id] + ')</span> '+Caths.s[Caths.lang].ofSamples;
 
 			// purity
-			h2 = '';
+			var h2 = '';
 			if (id != 'etc' && id != 'mix' && Caths.data.purity[id]) {
 				var arr = Caths.data.purity[id];
 				var avg = Math.round(arr.reduce((a, b) => a + b) / arr.length);
@@ -614,11 +697,11 @@ Caths.setupPlot = () => {
 			}
 
 			// contamination
-			h3 = '';
+			var h3 = '';
 			if (id != 'etc' && id != 'mix' && Caths.data.contamination[id]) {
 				var pct = Math.round((Caths.data.contamination[id] / Caths.data.count[id])*100);
-				h3 = (h2 == '') ? '<br />' : '; ';
-				h3 += pct+'% '+Caths.s[Caths.lang].contaminated;
+				//h3 = (h2 == '') ? '<br />' : '; ';
+				h3 = '<br />'+pct+'% '+Caths.s[Caths.lang].contaminated;
 			}
 		}
 		Caths.data.hovertemplate[i][0] = h0;
@@ -649,8 +732,8 @@ Caths.renderPlot = () => {
 	  ids: Caths.data.ids,
 	  node: Object.assign({
 	    customdata: Caths.data.hovertemplate,
-	    hovertemplate: '%{customdata[0]}%{customdata[1]}%{customdata[2]}%{customdata[3]}',
-	   	hoverlabel: Caths.sankey.hoverlabel,
+		hovertemplate: '%{customdata[0]}%{customdata[1]}%{customdata[2]}%{customdata[3]}',
+		hoverlabel: Caths.hoverLabel(),
 	    label: Caths.data.labelBr,
 	    color: Caths.data.color,
 	  }, Caths.sankey.nodeMergeIn),
@@ -720,8 +803,9 @@ Caths.setupTapInteractivity = () => {
 		Caths.setContextClasses(Caths.tapPopupEl, ids);
 
 		// set contents
-		var cd = dP.customdata;
-		Caths.tapPopupEl.innerHTML = (cd.join) ? cd.join('') : cd;
+		var cd = (dP.customdata.join) ? dP.customdata.join('') : dP.customdata;
+		cd = cd.replace(/<\/extra><br ?\/?>(.*)$/, '</extra><div class="extra">$1</div>');
+		Caths.tapPopupEl.innerHTML = cd;
 
 		// show (if not yet)
 		var d = window.getComputedStyle(Caths.tapPopupEl).getPropertyValue('display');
@@ -822,6 +906,16 @@ Caths.postProcess = () => {
 		var label = n.childNodes[1];
 		if (h < 65) label.style.fontSize = '15px';
 		if (h < 40) label.style.fontSize = '13px';
+
+		var subst = label.getAttribute('data-unformatted');
+		if (subst) {
+			// remove any tags or special chars
+			var substCleaned = subst.replace(/<[^>]*>/g, '').replace(/[^a-z0-9]/gi, '');
+			if (substCleaned) {
+				var cl = Caths.toId('node'+substCleaned);
+				if (cl) label.classList.add(cl);
+			}
+		}
 
 		if (Caths.sankey.dataMergeIn.orientation == 'v') {
 			label.setAttribute('text-anchor', 'middle');

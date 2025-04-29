@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Cathinone Sankey</title>
+	<title>Cathinon-Proben 2024</title>
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
    	<meta charset="utf-8" />
-
    	<link rel="stylesheet" href="cathinones-sankey-files/lib/InterVariable.css" />
 </head>
-<body style="background:#000">
+<body class="caths-color-zurich-white">
 
 	<h1 id="caths-h1">&nbsp;</h1>
 
@@ -15,7 +14,13 @@
 	<script src="cathinones-sankey-files/_load.js" type="text/javascript"></script>
 
 	<form id="cathsform">
-		<select id="setting-lang" autocomplete="off" onchange="Caths.setLang(this.options[this.selectedIndex].value)">
+		<select id="caths-setting-colorScheme" autocomplete="off" onchange="Caths.setColorScheme(this.options[this.selectedIndex].value, 'reload')">
+			<option value="zurich-white" selected="selected">Zürich (weiß)</option>
+			<option value="zurich-black">Zürich (schwarz)</option>
+			<option value="default">Safer Party</option>
+		</select>
+
+		<select id="caths-setting-lang" autocomplete="off" onchange="Caths.setLang(this.options[this.selectedIndex].value)">
 			<option value="de" selected="selected">DE</option>
 			<option value="en">EN</option>
 		</select>
@@ -30,12 +35,12 @@
 			<option value="[10, 11, 12]">2024 Q 4</option>
 		</select>
 
-		<select id="setting-includeRCs" autocomplete="off" onchange="Caths.set('includeRCs', this.options[this.selectedIndex].value)">
-			<option value="0">Als 3-MMC oder 4-MMC abgegeben</option>
+		<select id="caths-setting-includeRCs" autocomplete="off" onchange="Caths.set('includeRCs', this.options[this.selectedIndex].value)">
+			<option value="0">Als 3-MMC/4-MMC abgegeben</option>
 			<option value="1">Alle abgegebenen Cathinone</option>
 		</select>
 
-		<button type="button" onclick="Caths.saveSvg()">SVG speichern</button>
+		<button type="button" onclick="Caths.saveSvg()">SVG-Grafik generieren</button>
 	</form>
 
 </body>
