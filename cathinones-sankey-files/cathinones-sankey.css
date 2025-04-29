@@ -28,9 +28,9 @@ body.caths-color-zurich-white #caths {
 	--col-hover-text: #000;
 	--col-hover-hilite: #000; /*A3BA88*/
 }
-body.caths-color-default,
-body.caths-color-zurich-black {
-	background: #000;
+body.caths-color-default #caths,
+body.caths-color-zurich-black #caths{
+	color: #999;
 }
 body.caths-color-zurich-white #cathsform input,
 body.caths-color-zurich-white #cathsform select,
@@ -46,9 +46,6 @@ body.caths-color-zurich-black #caths.format-desktop svg .sankey-node .node-label
 body.caths-color-zurich-white #caths.format-mobile svg .sankey-node .node-label,
 body.caths-color-zurich-white #caths svg .sankey-node .node-label:not(.node3mmc):not(.node4mmc) {
 	fill: #000 !important;
-}
-body.caths-color-zurich-white {
-	background: #FFF;
 }
 body.caths-color-zurich-white #caths-h1 {
 	color: #000;
@@ -137,15 +134,14 @@ body.caths-color-zurich-white #caths-h1 {
 #caths #caths-as,
 #caths #caths-is {
 	text-align: center;
-	color: rgba(255, 255, 255, .5);
 	transition: all .15s;
 	font-weight: 700;
 }
 #caths.format-desktop #caths-as {
 	margin-bottom: .2em;
 }
-#caths #caths-as:before,
-#caths #caths-is:after {
+body #caths #caths-as:before,
+body #caths #caths-is:after {
 	content: "➔";
 	display: inline-block;
 	margin: 0 .4em;
@@ -187,10 +183,24 @@ body.caths-color-zurich-white #caths-h1 {
 	opacity:.6;
 }
 
-#caths img#caths-export[src] {
-	border: 1px dotted #999;
-	width: 50%;
+#caths #caths-export {
+	display: none;
+	opacity: 0;
+	transition: opacity .3s;
 	margin-top: 1.3rem;
+}
+#caths #caths-export #caths-export-text {
+	display: inline-block;
+	background: rgba(200,200,200,.2);
+	padding: .4rem .8rem;
+	border-top-left-radius: .4rem;
+	border-top-right-radius: .4rem;
+}
+#caths #caths-export img {
+	display: block;
+	border: 1px dotted rgba(150,150,150,.5);
+	width: 50%;
+	margin: 0 auto;
 }
 
 @media (min-width: 750px) {
@@ -237,6 +247,7 @@ body.caths-color-zurich-white #caths-h1 {
 #caths svg g.hoverlayer path {
 	/*backdrop-filter: blur(.3em); doesn't work */
 	filter: drop-shadow(0 0 5px rgba(0, 0, 0, .4));
+	-webkit-filter: drop-shadow(0 0 5px rgba(0, 0, 0, .4));
 	fill-opacity: .9 !important;
 }
 #caths svg g.hoverlayer g.hovertext {

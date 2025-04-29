@@ -3,7 +3,7 @@
 
 window.Caths = {};
 
-Caths.lang = 'de';
+Caths.lang = Caths.lang || 'de';
 Caths.s = {
 	'de': {
 		h1: 'Was war 2024 wirklich<br />in Cathinon-Proben?',
@@ -62,7 +62,7 @@ Caths.s = {
 	},
 };
 
-Caths.colorScheme = 'default';
+Caths.colorScheme = Caths.colorScheme || 'default';
 Caths.colors = {
 	'default': { // Safer Party
 		'text': '#FFFFFF',
@@ -232,7 +232,10 @@ Caths.setup = () => {
 				<div id="caths-plot"></div>
 				<div id="caths-is">&nbsp;</div>
 			</div>
-			<img id="caths-export" title="Rechtsklick => Speichern unter..." />
+			<div id="caths-export">
+				<div id="caths-export-text">Rechtsklick &rarr; Speichern unter...</div>
+				<img id="caths-export-img" />
+			</div>
 			<div id="caths-tappopup"></div>`;
 
 		Caths.plot = document.getElementById(Caths.const.plotElId);
@@ -473,7 +476,10 @@ Caths.saveSvg = () => {
 		Caths.plot,
 		Object.assign({ format:'svg' }, Caths.const.size)
 	).then(function(url) {
-		var img_svg = document.getElementById(Caths.const.exportElId);
+		var ex = document.getElementById(Caths.const.exportElId);
+		ex.style.display = 'block';
+		ex.style.opacity = 1;
+		var img_svg = ex.getElementsByTagName('img')[0];
     	img_svg.setAttribute("src", url);
 	});
 };
