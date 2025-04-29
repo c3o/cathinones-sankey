@@ -10,7 +10,7 @@ const CathsLoad = {
     scriptTag.setAttribute('type', 'text/javascript');
     if (window.location.search) src += window.location.search;
     scriptTag.src = src;
-    scriptTag.onload = callback;
+    if (callback) scriptTag.onload = callback;
     document.body.appendChild(scriptTag);
   },
   css: (href) => {
@@ -27,14 +27,12 @@ window.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById(CathsElId)) {
     const path = window.CathsPath || 'cathinones-sankey-files/';
     CathsLoad.css(path+'cathinones-sankey.css');
-    CathsLoad.script(path+'lib/d3.min.js', function() {
-      CathsLoad.script(path+'lib/plotly-sankeyonly.min.js', function() {
-        CathsLoad.script(path+'cathinones2024.csv.js', function() {
-          CathsLoad.script(path+'cathinones-sankey.js', function() {
-            Caths.setup();
-          });
-        });
-      });
+    CathsLoad.script(path+'lib/d3.min.js');
+    CathsLoad.script(path+'lib/plotly-sankeyonly.min.js');
+    CathsLoad.script(path+'cathinones2024.csv.js');
+    CathsLoad.script(path+'cathinones-sankey.js');
+    window.addEventListener('load', () => {
+      Caths.setup();
     });
   } else {
     console.error('Fehler: Element #'+CathsElId+' nicht gefunden!');

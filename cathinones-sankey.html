@@ -3,15 +3,22 @@
 <head>
 	<title>Cathinon-Proben 2024</title>
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
-   	<meta charset="utf-8" />
-   	<link rel="stylesheet" href="cathinones-sankey-files/lib/InterVariable.css" />
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="cathinones-sankey-files/lib/InterVariable.css" />
+	<link rel="stylesheet" href="cathinones-sankey-files/cathinones-sankey.css" />
+	<script type="text/javascript" src="cathinones-sankey-files/lib/d3.min.js"></script>
+	<script type="text/javascript" src="cathinones-sankey-files/lib/plotly-sankeyonly.min.js"></script>
+	<script type="text/javascript" src="cathinones-sankey-files/cathinones2024.csv.js"></script>
+	<script type="text/javascript" src="cathinones-sankey-files/cathinones-sankey.js"></script>
+	<script type="text/javascript">
+		window.addEventListener('load', () => { Caths.setup(); });
+	</script>
 </head>
 <body class="caths-color-zurich-white">
 
-	<h1 id="caths-h1">&nbsp;</h1>
+	<h1 id="caths-h1">Was war 2024 wirklich<br />in Cathinon-Proben?</h1>
 
 	<div id="caths" lang="de"><noscript><p style="color:red">Fehler: JavaScript ist nicht aktiviert.</p></noscript>Lade Visualisierung...</div>
-	<script src="cathinones-sankey-files/_load.js" type="text/javascript"></script>
 
 	<form id="cathsform">
 		<select id="caths-setting-colorScheme" autocomplete="off" onchange="Caths.setColorScheme(this.options[this.selectedIndex].value, 'reload')">
