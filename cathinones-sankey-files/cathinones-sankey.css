@@ -26,7 +26,7 @@ body.caths-color-zurich-white #caths {
 	--col-hover-bg: rgba(255,255,255,.8);
 	--col-hover-border: rgba(200,200,200,.8);
 	--col-hover-text: #000;
-	--col-hover-hilite: #A3BA88;
+	--col-hover-hilite: #000; /*A3BA88*/
 }
 body.caths-color-default,
 body.caths-color-zurich-black {
