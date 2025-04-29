@@ -766,11 +766,23 @@ Caths.renderPlot = () => {
 
 Caths.setupHoverInteractivity = () => {
 
+	// Shadow for Safari
+	let defs = Caths.plot.getElementsByTagName('defs')[0];
+	let filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+	filter.id = 'shadow';
+	filter.setAttributeNS(null, 'x', '-50%');
+	filter.setAttributeNS(null, 'y', '-50%');
+	filter.setAttributeNS(null, 'width', '200%');
+	filter.setAttributeNS(null, 'height', '200%');
+	filter.innerHTML = '<feDropShadow dx="0" dy="0" stdDeviation="3" flood-opacity="0.5"/>';
+    defs.appendChild(filter);
+
 	Caths.plot.on('plotly_hover', (data) => {
 		var ids = Caths.getContextDataIds(data.points[0]);
 		setTimeout(() => {
 			var ht = document.getElementsByClassName('hovertext')[0];
 			if (ht) {
+				ht.firstChild.setAttribute('filter', 'url(#shadow)');
 				var a = ht.__data__['anchor']; // "start" or "end"
 				ht.classList.add(a);
 				Caths.setContextClasses(ht, ids);

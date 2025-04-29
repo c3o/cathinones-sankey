@@ -23,11 +23,15 @@ body.caths-color-zurich-black #caths {
 	--col-hover-text: #FFFFFF;
 }
 body.caths-color-zurich-white #caths {
-	--col-hover-bg: rgba(255,255,255,.8);
-	--col-hover-border: rgba(200,200,200,.8);
+	--col-hover-bg: rgba(233,236,240,.8);
+	--col-hover-border: rgba(200,205,210,.6);
 	--col-hover-text: #000;
 	--col-hover-hilite: #000; /*A3BA88*/
 }
+body.caths-color-zurich-white #caths #caths-tappopup {
+	box-shadow: 0 -.1em .3em rgba(80,80,80,.5);
+}
+
 body.caths-color-default #caths,
 body.caths-color-zurich-black #caths{
 	color: #999;
@@ -224,12 +228,7 @@ body #caths #caths-is:after {
 }
 
 #caths svg .sel {
-	/*filter: drop-shadow(0 0 .2em rgba(255, 255, 255, .5)) !important;*/
 	fill-opacity: .51 !important;
-	/* fill: #ddd; */
-	/*stroke-width: 4px !important;
-  	stroke: #ffffff !important;
-  	stroke-opacity: .15 !important;*/
 }
 #caths svg .correct.sel {
 	fill-opacity: .7 !important;
@@ -238,16 +237,15 @@ body #caths #caths-is:after {
 	filter: drop-shadow(0 0 .15em rgba(255, 255, 255, .5)) !important;
 }
 #caths svg .sankey-node.sel rect {
-	/*filter: drop-shadow(0 0 .1em rgba(255, 255, 255, .4)) !important;*/
 	fill-opacity: 1 !important;
 	stroke-width: 4px !important;
   	stroke: #fff !important;
   	stroke-opacity: .15 !important;
 }
+#caths svg g.hoverlayer { overflow: visible }
 #caths svg g.hoverlayer path {
-	/*backdrop-filter: blur(.3em); doesn't work */
-	filter: drop-shadow(0 0 5px rgba(0, 0, 0, .4));
-	-webkit-filter: drop-shadow(0 0 5px rgba(0, 0, 0, .4));
+	/* backdrop-filter: blur(.3em); doesn't work *x/
+	/* filter: drop-shadow(0 0 5px rgba(0, 0, 0, .4)); implemented as SVG filter for Safai compat */
 	fill-opacity: .9 !important;
 }
 #caths svg g.hoverlayer g.hovertext {
