@@ -765,9 +765,10 @@ Caths.renderPlot = () => {
 
 };
 
+Caths.hoverTimeouts = [];
 Caths.setupHoverInteractivity = () => {
 
-	// Shadow for Safari
+	// SVG shadow
 	let defs = Caths.plot.getElementsByTagName('defs')[0];
 	let filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
 	filter.id = 'shadow';
@@ -776,20 +777,22 @@ Caths.setupHoverInteractivity = () => {
 	filter.setAttributeNS(null, 'width', '200%');
 	filter.setAttributeNS(null, 'height', '200%');
 	filter.innerHTML = '<feDropShadow dx="0" dy="0" stdDeviation="3" flood-opacity="0.5"/>';
-    defs.appendChild(filter);
+	defs.appendChild(filter);
 
 	Caths.plot.on('plotly_hover', (data) => {
 		var ids = Caths.getContextDataIds(data.points[0]);
-		setTimeout(() => {
+		Caths.hoverTimeouts.forEach(ht => window.clearTimeout(ht));
+		const fixHover = () => {
 			var ht = document.getElementsByClassName('hovertext')[0];
 			if (ht) {
 				ht.firstChild.setAttribute('filter', 'url(#shadow)');
-				var a = ht.__data__['anchor']; // "start" or "end"
-				ht.classList.add(a);
+				ht.classList.add(ht.__data__['anchor']); // "start" or "end"
 				Caths.setContextClasses(ht, ids);
-				ht.style.opacity = 1;
+				setTimeout(() => { ht.style.opacity = 1 }, 10);
 			}
-		}, 10);
+		};
+		Caths.hoverTimeouts.push(setTimeout(fixHover, 10));
+		Caths.hoverTimeouts.push(setTimeout(fixHover, 80));
 	});
 
 	Caths.plot.on('plotly_unhover', (data) => {

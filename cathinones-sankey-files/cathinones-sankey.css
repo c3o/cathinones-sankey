@@ -51,6 +51,9 @@ body.caths-color-zurich-white #caths.format-mobile svg .sankey-node .node-label,
 body.caths-color-zurich-white #caths svg .sankey-node .node-label:not(.node3mmc):not(.node4mmc) {
 	fill: #000 !important;
 }
+body.caths-color-zurich-black #caths svg .sel {
+  fill-opacity: .85 !important;
+}
 body.caths-color-zurich-white #caths-h1 {
 	color: #000;
 }
@@ -233,6 +236,9 @@ body #caths #caths-is:after {
 }
 #caths svg .correct.sel {
 	fill-opacity: .7 !important;
+}
+#caths svg g.sankey-node text {
+	pointer-events: none; /* catch hover only on node group, not additionally on text */
 }
 #caths svg .sankey-node.sel text {
 	filter: drop-shadow(0 0 .15em rgba(255, 255, 255, .5)) !important;
