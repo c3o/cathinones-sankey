@@ -50,7 +50,7 @@ Caths.s = {
 		as: 'Submitted as...',
 		is: 'Test results',
 		subst: {
-			'Dimethylpentylon': 'Dimethylpentylone',
+			'Dipentylon': 'Dipentylone',
 			'Amphetamin': 'Amphetamine',
 			'Methamphetamin': 'Methamphetamine',
 			'Koffein': 'Caffeine',
@@ -75,7 +75,7 @@ Caths.colors = {
 		'3-CMC': '#5040E6',
 		'4-MMC': '#CCAA33',
 		'4-CMC': '#BB6633',
-		'Dimethylpentylon': '#33CC66',
+		'Dipentylon': '#33CC66',
 		'etc': '#999999',
 		'mix': '#666670',
 		'hoverText': '#ffffff',
@@ -92,7 +92,7 @@ Caths.colors = {
 		'3-CMC': '#BCE59E',
 		'4-MMC': '#0F05A0',
 		'4-CMC': '#BCE59E',
-		'Dimethylpentylon': '#BCE59E',
+		'Dipentylon': '#BCE59E',
 		'etc': '#BCE59E',
 		'mix': '#BCE59E',
 		'hoverText': '#ffffff',
@@ -110,7 +110,7 @@ Caths.colors = {
 		'3-CMC': '#BCE59E',
 		'4-MMC': '#0F05A0',
 		'4-CMC': '#BCE59E',
-		'Dimethylpentylon': '#BCE59E',
+		'Dipentylon': '#BCE59E',
 		'etc': '#BCE59E',
 		'mix': '#BCE59E',
 		'hoverText': '#000000',
@@ -136,6 +136,7 @@ Caths.const = {
 		['Cocain', 'Kokain'],
 		['Coffein', 'Koffein'],
 		['Kein', 'keine'],
+		['Dimethylpentylon', 'Dipentylon'],
 	],
 	substIrrelevant: [
 		'iso',		// zB "iso-3-mmc" Syntheseverunr.
@@ -465,7 +466,7 @@ Caths.addToData = (id, label, col, htl) => {
 	var labelTrans = Caths.translateSubstance(label);
 	Caths.data.label.push(labelTrans);
 	var labelBr = labelTrans;
-	if (labelTrans.length > 10) labelBr = labelTrans.replace('pentylon', '-<br />pentylon');
+	//if (labelTrans.length > 6) labelBr = labelTrans.replace('pentylon', 'pent-<br />ylon');
 	Caths.data.labelBr.push(labelBr);
 	Caths.data.color.push(col || Caths.colors[Caths.colorScheme]['default']);
 	Caths.data.hovertemplate.push([null, htl, null, null]); // percent, template, avg. purity, %contamined

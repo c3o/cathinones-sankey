@@ -4,7 +4,7 @@
 	--col-4mmc: #DDBB44;
 	--col-3cmc: #6050F6;
 	--col-4cmc: #CC7744;
-	--col-dimethylpentylon: #44DD77;
+	--col-dipentylone: #44DD77;
 	--col-hover-bg: rgba(30,30,30,.9);
 	--col-hover-text: #fff;
 	--col-hover-border: rgba(60,60,60,.9);
@@ -17,7 +17,7 @@ body.caths-color-zurich-white #caths {
 	--col-4mmc: #0F05A0;
 	--col-3cmc: #BCE59E;
 	--col-4cmc: #BCE59E;
-	--col-dimethylpentylon: #BCE59E;
+	--col-dipentylone: #BCE59E;
 }
 body.caths-color-zurich-black #caths {
 	--col-hover-text: #FFFFFF;
@@ -331,14 +331,14 @@ body #caths #caths-is:after {
 	fill: var(--col-4cmc);
 	color: var(--col-4cmc);
 }
-/*#caths svg g.hovertext.subst-dimethylpentylon tspan,*/
-/*#caths svg g.hovertext.as-dimethylpentylon.is-dimethylpentylon tspan,*/
-#caths svg g.hovertext.is-dimethylpentylon tspan:last-child tspan:last-child,
-/*#caths-tappopup.subst-dimethylpentylon,*/
-/*#caths-tappopup.as-dimethylpentylon.is-dimethylpentylon,*/
-#caths-tappopup.is-dimethylpentylon span:last-of-type {
-	fill: var(--col-dimethylpentylon);
-	color: var(--col-dimethylpentylon);
+/*#caths svg g.hovertext.subst-dipentylone tspan,*/
+/*#caths svg g.hovertext.as-dipentylone.is-dipentylone tspan,*/
+#caths svg g.hovertext.is-dipentylone tspan:last-child tspan:last-child,
+/*#caths-tappopup.subst-dipentylone,*/
+/*#caths-tappopup.as-dipentylone.is-dipentylone,*/
+#caths-tappopup.is-dipentylone span:last-of-type {
+	fill: var(--col-dipentylone);
+	color: var(--col-dipentylone);
 }
 
 body.caths-color-zurich-white #caths svg g.hovertext.is-2mmc tspan:last-child tspan:last-child,
@@ -347,14 +347,14 @@ body.caths-color-zurich-white #caths svg g.hovertext.is-etc tspan:last-child tsp
 body.caths-color-zurich-white #caths svg g.hovertext.is-mix tspan:last-child tspan:last-child,
 body.caths-color-zurich-white #caths svg g.hovertext.is-4cmc tspan:last-child tspan:last-child,
 body.caths-color-zurich-white #caths svg g.hovertext.is-mdma tspan:last-child tspan:last-child,
-body.caths-color-zurich-white #caths svg g.hovertext.is-dimethylpentylon tspan:last-child tspan:last-child,
+body.caths-color-zurich-white #caths svg g.hovertext.is-dipentylone tspan:last-child tspan:last-child,
 #caths-tappopup.is-2mmc span:last-of-type,
 #caths-tappopup.is-3cmc span:last-of-type,
 #caths-tappopup.is-etc span:last-of-type,
 #caths-tappopup.is-mix span:last-of-type,
 #caths-tappopup.is-4cmc span:last-of-type,
 #caths-tappopup.is-mdma span:last-of-type,
-#caths-tappopup.is-dimethylpentylon span:last-of-type,
+#caths-tappopup.is-dipentylone span:last-of-type,
 body.caths-color-zurich-black #caths svg g.hovertext.as-3mmc.is-3mmc tspan,
 body.caths-color-zurich-black #caths svg g.hovertext.as-4mmc.is-4mmc tspan,
 body.caths-color-zurich-black #caths-tappopup.is-3mmc span:last-of-type,
