@@ -292,7 +292,7 @@ Caths.desktopLayout = () => {
 	Caths.plot.style.height = h+'px';
 	Caths.sankey.dataMergeIn.orientation = 'v';
 	Caths.sankey.layout.margin = { l: 20, r: 20, t: 20, b: 30 };
-	Caths.sankey.nodeMergeIn.pad =  30;
+	Caths.sankey.nodeMergeIn.pad =  27;
 };
 
 // Settings
@@ -926,10 +926,9 @@ Caths.postProcess = () => {
 	var nodes = Array.from(Caths.plot.getElementsByClassName('sankey-node'));
 	nodes.forEach(n => {
 
-		var h = n.firstChild.getAttribute('height'); // rect
-		var label = n.childNodes[1];
-		if (h < 65) label.style.fontSize = '15px';
-		if (h < 40) label.style.fontSize = '13px';
+		var h = n.firstChild.getAttribute('height'); // rect (= width in v-orientation)
+		var label = n.childNodes[1]; // text
+		if (h < 65) { label.style.fontSize = '15px'; label.setAttribute('y', -2); }
 
 		var subst = label.getAttribute('data-unformatted');
 		if (subst) {
@@ -942,8 +941,14 @@ Caths.postProcess = () => {
 		}
 
 		if (Caths.sankey.dataMergeIn.orientation == 'v') {
+			if (h < 40) { label.style.fontSize = '12px'; label.setAttribute('y', -2.5); }
+			var labelLength = label.getComputedTextLength();
+			if (labelLength > h && label.innerHTML.length > 3) {
+				let len = (label.innerHTML.includes('-')) ? 3 : 2; // "4-C" but "MD"
+				label.innerHTML = label.innerHTML.substring(0, len);
+			}
 			label.setAttribute('text-anchor', 'middle');
-			label.setAttribute('x', h/2.15);
+			label.setAttribute('x', h/2-3);
 		}
 
 	});
