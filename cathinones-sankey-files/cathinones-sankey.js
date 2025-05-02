@@ -792,12 +792,15 @@ Caths.setupHoverInteractivity = () => {
 				Caths.setContextClasses(ht, ids);
 				setTimeout(() => { ht.style.opacity = 1 }, 10);
 			}
+			// Interval to catch realignment of hover at plot borders.
+			// Pretty expensive computationally for an edge case!
+			Caths.hoverTimeouts.push(setTimeout(fixHover, 100));
 		};
 		Caths.hoverTimeouts.push(setTimeout(fixHover, 10));
-		Caths.hoverTimeouts.push(setTimeout(fixHover, 80));
 	});
 
 	Caths.plot.on('plotly_unhover', (data) => {
+		Caths.hoverTimeouts.forEach(ht => window.clearTimeout(ht));
 		if (data.event.target.nodeName == 'rect') { // unhovering a subst
 			Caths.removeHighlight();
 		}
