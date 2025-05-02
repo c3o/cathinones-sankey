@@ -52,7 +52,10 @@ body.caths-color-zurich-white #caths svg .sankey-node .node-label:not(.node3mmc)
 	fill: #000 !important;
 }
 body.caths-color-zurich-black #caths svg .sel {
-  fill-opacity: .85 !important;
+	fill-opacity: .85 !important;
+}
+body.caths-color-zurich-white #caths svg .sel {
+	fill-opacity: .45 !important;
 }
 body.caths-color-zurich-white #caths-h1 {
 	color: #000;
@@ -185,11 +188,17 @@ body #caths #caths-is:after {
 	box-shadow: 0 -.2em .4em rgba(0,0,0,.4);
 	z-index: 999;
 }
+
 #caths-tappopup .extra {
 	margin-top:.5em;
 	font-size:.9em;
 	opacity:.6;
 }
+#caths svg g.hovertext.subst-is tspan+tspan+tspan,
+#caths svg g.hovertext.subst-is tspan+tspan+tspan+tspan {
+	opacity:.6;
+}
+
 
 #caths #caths-export {
 	display: none;
@@ -287,66 +296,74 @@ body #caths #caths-is:after {
 	font-weight: bold;
 	font-size: 17px;
 }
-#caths svg g.hovertext.correct tspan:last-child tspan:last-child,
-#caths-tappopup.correct span:last-of-type:not(:first-child) {
-	font-weight: normal;
+
+#caths svg g.hovertext.subst-is tspan+tspan tspan {
+	font-weight: bold;
 }
 
-/*#caths svg g.hovertext.subst-2mmc tspan,*/
+#caths svg g.hovertext.subst-2mmc tspan.line + tspan.line tspan,
 /*#caths svg g.hovertext.as-2mmc.is-2mmc tspan,*/
 #caths svg g.hovertext.is-2mmc tspan:last-child tspan:last-child,
-/*#caths-tappopup.subst-2mmc,*/
+#caths-tappopup.subst-2mmc span:last-of-type,
 /*#caths-tappopup.as-2mmc.is-2mmc,*/
 #caths-tappopup.is-2mmc span:last-of-type {
 	fill: var(--col-2mmc);
 	color: var(--col-2mmc);
 }
-/*#caths svg g.hovertext.subst-3mmc tspan,*/
+#caths svg g.hovertext.subst-3mmc tspan.line + tspan.line tspan,
 /*#caths svg g.hovertext.as-3mmc.is-3mmc tspan,*/
 #caths svg g.hovertext.is-3mmc tspan:last-child tspan:last-child,
-/*#caths-tappopup.subst-3mmc,*/
+#caths-tappopup.subst-3mmc span:last-of-type,
 /*#caths-tappopup.as-3mmc.is-3mmc,*/
 #caths-tappopup.is-3mmc span:last-of-type {
 	fill: var(--col-3mmc);
 	color: var(--col-3mmc);
 }
-/*#caths svg g.hovertext.subst-4mmc tspan,*/
+#caths svg g.hovertext.subst-4mmc tspan.line + tspan.line tspan,
 /*#caths svg g.hovertext.as-4mmc.is-4mmc tspan,*/
 #caths svg g.hovertext.is-4mmc tspan:last-child tspan:last-child,
-/* #caths-tappopup.subst-4mmc, */
+#caths-tappopup.subst-4mmc span:last-of-type,
 /*#caths-tappopup.as-4mmc.is-4mmc,*/
 #caths-tappopup.is-4mmc span:last-of-type {
 	fill: var(--col-4mmc);
 	color: var(--col-4mmc);
 }
-/*#caths svg g.hovertext.subst-3cmc tspan,*/
+#caths svg g.hovertext.subst-3cmc tspan.line + tspan.line tspan,
 /*#caths svg g.hovertext.as-3cmc.is-3cmc tspan,*/
 #caths svg g.hovertext.is-3cmc tspan:last-child tspan:last-child,
-/*#caths-tappopup.subst-3cmc,*/
+#caths-tappopup.subst-3cmc span:last-of-type,
 /*#caths-tappopup.as-3cmc.is-3cmc,*/
 #caths-tappopup.is-3cmc span:last-of-type {
 	fill: var(--col-3cmc);
 	color: var(--col-3cmc);
 }
-/*#caths svg g.hovertext.subst-4cmc tspan,*/
+#caths svg g.hovertext.subst-4cmc tspan.line + tspan.line tspan,
 /*#caths svg g.hovertext.as-4cmc.is-4cmc tspan,*/
 #caths svg g.hovertext.is-4cmc tspan:last-child tspan:last-child,
-/*#caths-tappopup.subst-4cmc,*/
+#caths-tappopup.subst-4cmc span:last-of-type,
 /*#caths-tappopup.as-4cmc.is-4cmc,*/
 #caths-tappopup.is-4cmc span:last-of-type {
 	fill: var(--col-4cmc);
 	color: var(--col-4cmc);
 }
-/*#caths svg g.hovertext.subst-dipentylone tspan,*/
+#caths svg g.hovertext.subst-dipentylon tspan.line + tspan.line tspan,
 /*#caths svg g.hovertext.as-dipentylone.is-dipentylone tspan,*/
-#caths svg g.hovertext.is-dipentylone tspan:last-child tspan:last-child,
-/*#caths-tappopup.subst-dipentylone,*/
+#caths svg g.hovertext.is-dipentylon tspan:last-child tspan:last-child,
+#caths-tappopup.subst-dipentylone span:last-of-type,
 /*#caths-tappopup.as-dipentylone.is-dipentylone,*/
-#caths-tappopup.is-dipentylone span:last-of-type {
+#caths-tappopup.is-dipentylon span:last-of-type {
 	fill: var(--col-dipentylone);
 	color: var(--col-dipentylone);
 }
 
+body.caths-color-zurich-white #caths svg g.hovertext.subst-2mmc tspan.line + tspan.line tspan,
+body.caths-color-zurich-white #caths svg g.hovertext.subst-3cmc tspan.line + tspan.line tspan,
+body.caths-color-zurich-white #caths svg g.hovertext.subst-4cmc tspan.line + tspan.line tspan,
+body.caths-color-zurich-white #caths svg g.hovertext.subst-dipentylon tspan.line + tspan.line tspan,
+body.caths-color-zurich-white #caths-tappopup.subst-2mmc span:last-of-type,
+body.caths-color-zurich-white #caths-tappopup.subst-3cmc span:last-of-type,
+body.caths-color-zurich-white #caths-tappopup.subst-4cmc span:last-of-type,
+body.caths-color-zurich-white #caths-tappopup.subst-dipentylone span:last-of-type,
 body.caths-color-zurich-white #caths svg g.hovertext.is-2mmc tspan:last-child tspan:last-child,
 body.caths-color-zurich-white #caths svg g.hovertext.is-3cmc tspan:last-child tspan:last-child,
 body.caths-color-zurich-white #caths svg g.hovertext.is-etc tspan:last-child tspan:last-child,
@@ -354,17 +371,21 @@ body.caths-color-zurich-white #caths svg g.hovertext.is-mix tspan:last-child tsp
 body.caths-color-zurich-white #caths svg g.hovertext.is-4cmc tspan:last-child tspan:last-child,
 body.caths-color-zurich-white #caths svg g.hovertext.is-mdma tspan:last-child tspan:last-child,
 body.caths-color-zurich-white #caths svg g.hovertext.is-dipentylone tspan:last-child tspan:last-child,
-#caths-tappopup.is-2mmc span:last-of-type,
-#caths-tappopup.is-3cmc span:last-of-type,
-#caths-tappopup.is-etc span:last-of-type,
-#caths-tappopup.is-mix span:last-of-type,
-#caths-tappopup.is-4cmc span:last-of-type,
-#caths-tappopup.is-mdma span:last-of-type,
-#caths-tappopup.is-dipentylone span:last-of-type,
+body.caths-color-zurich-white #caths-tappopup.is-2mmc span:last-of-type,
+body.caths-color-zurich-white #caths-tappopup.is-3cmc span:last-of-type,
+body.caths-color-zurich-white #caths-tappopup.is-etc span:last-of-type,
+body.caths-color-zurich-white #caths-tappopup.is-mix span:last-of-type,
+body.caths-color-zurich-white #caths-tappopup.is-4cmc span:last-of-type,
+body.caths-color-zurich-white #caths-tappopup.is-mdma span:last-of-type,
+body.caths-color-zurich-white #caths-tappopup.is-dipentylone span:last-of-type,
 body.caths-color-zurich-black #caths svg g.hovertext.as-3mmc.is-3mmc tspan,
 body.caths-color-zurich-black #caths svg g.hovertext.as-4mmc.is-4mmc tspan,
 body.caths-color-zurich-black #caths-tappopup.is-3mmc span:last-of-type,
-body.caths-color-zurich-black #caths-tappopup.is-4mmc span:last-of-type {
+body.caths-color-zurich-black #caths-tappopup.is-4mmc span:last-of-type,
+body.caths-color-zurich-black #caths svg g.hovertext.subst-3mmc tspan.line + tspan.line tspan,
+body.caths-color-zurich-black #caths svg g.hovertext.subst-4mmc tspan.line + tspan.line tspan,
+body.caths-color-zurich-black #caths-tappopup.subst-3mmc span:last-of-type,
+body.caths-color-zurich-black #caths-tappopup.subst-4mmc span:last-of-type {
 	fill: var(--col-hover-hilite);
 	color: var(--col-hover-hilite);
 }

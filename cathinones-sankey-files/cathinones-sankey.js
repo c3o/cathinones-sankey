@@ -516,7 +516,7 @@ Caths.parseData = () => {
 				asId,
 				Caths.toMaybeLabel(as),
 				Caths.colors[Caths.colorScheme][as],
-				' '+Caths.s[Caths.lang].supposed+Caths.translateSubstance(as)+' '+Caths.s[Caths.lang].submitted+'<extra></extra>'
+				' '+Caths.s[Caths.lang].supposed+'<span>'+Caths.translateSubstance(as)+'</span> '+Caths.s[Caths.lang].submitted+'<extra></extra>'
 			);
 		}
 		
@@ -571,7 +571,7 @@ Caths.parseData = () => {
 				isId,
 				found[0].subst,
 				Caths.colors[Caths.colorScheme][found[0].subst],
-				' '+Caths.s[Caths.lang].wasMostly+' '+Caths.translateSubstance(found[0].subst)+
+				' '+Caths.s[Caths.lang].wasMostly+' <span>'+Caths.translateSubstance(found[0].subst)+'</span>'+
 				'<extra></extra>'
 			);
 		}
@@ -786,6 +786,8 @@ Caths.setupHoverInteractivity = () => {
 			var ht = document.getElementsByClassName('hovertext')[0];
 			if (ht) {
 				ht.firstChild.setAttribute('filter', 'url(#shadow)');
+				ht.classList.remove('start');
+				ht.classList.remove('end');
 				ht.classList.add(ht.__data__['anchor']); // "start" or "end"
 				Caths.setContextClasses(ht, ids);
 				setTimeout(() => { ht.style.opacity = 1 }, 10);
@@ -891,15 +893,23 @@ Caths.setContextClasses = (el, ids) => {
 
 	var id0clean = ids[0].replace('?', '');
 
+	var classesAfter = ['hovertext'];
+
 	if (ids[1]) { // link (targetid => sourceid)
-		el.classList.add('as-'+id0clean);
-		if (ids[1]) el.classList.add('is-'+ids[1]);
-		if (id0clean == ids[1]) el.classList.add('correct');
+		classesAfter.push('as-'+id0clean);
+		if (ids[1]) classesAfter.push('is-'+ids[1]);
+		if (id0clean == ids[1]) classesAfter.push('correct');
 	} else { // node
-		el.classList.add('subst-'+id0clean);
+		classesAfter.push('subst-'+(ids[0].includes('?') ? 'as' : 'is'));
+		classesAfter.push('subst-'+id0clean);
 		var c = (ids[0].includes('?')) ? 'highlight-as' : 'highlight-is';
 		Caths.baseEl.classList.add(c);
 	}
+
+	classesAfter.forEach(c => {
+		el.classList.add(c);
+	});
+
 }
 
 Caths.removeHighlight = () => {
